@@ -4,6 +4,8 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import config from './webpack.config.babel';
 import express from 'express';
 
+import { TARGET_URL } from './server/config.js'
+
 
 
 var mongoose   = require('mongoose');

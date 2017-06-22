@@ -1,4 +1,6 @@
-const URL = 'http://localhost:3000/api/'
+// const URL = 'http://localhost:3000/api/'
+import { TARGET_URL } from '../config'
+const URL = TARGET_URL + 'api/'
 
 export const fetchMessages = () => {
   const request = new Request(URL+'messages', {
