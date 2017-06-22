@@ -57,10 +57,44 @@ app.use(webpackDevMiddleware(compiler, {
 mongoose.connect('mongodb://admin:123456@ds129352.mlab.com:29352/message'); // connect to our database
 
 var Message = require('./models/message');
-
+const Log = require('./models/log')
 
 // router
 var router = express.Router();
+
+router.route('/logs')
+    .post((req, res) => {
+        const log = new Log()
+        
+        log.id = req.body.id
+        log.pc = req.body.pc
+        log.action = req.body.action
+        log.date = new Date(req.body.date) // parse the date string to Date object
+
+        console.log(req.body)
+        console.log(log)
+
+        
+
+        // TODO: parse the log and maybe store the tripwire rather than store the log
+
+        // TODO: update the model using the log
+
+        // log.save((err, m) => {
+            // if (err)
+                // res.send(err)
+            // res.json({ log: 'Log saved'})
+            
+        // })
+        res.json({ log: 'Log saved'})
+    }).get((req, res) => {
+        Log.find(function(err, logs) {
+            if (err)
+                res.send(err);
+            // console.log('send back' + messages)
+            res.json(logs);
+        });
+    })
 
 router.route('/messages')
     .post(function(req, res) {
