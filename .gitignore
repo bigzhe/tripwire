@@ -4,4 +4,6 @@
 dist
 node_modules
 d3-cloud-master
+server/config.js
+config
 
