@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--Import Google Icon Font-->
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <div class="row">
+    <div class="col s2"></div>
+    <form class="col s10">
+      <div class="row">
+        <div id='display_area' class="input-field col s10">
+          <input oninput ="handleChange()" id="input_text" type="text" data-length="20">
+          <label for="input_text">CAN YOU DESCRIBE YOUR FEELINGS</label>
+          <button 
+            id='subBtn'
+            type="submit" 
+            class="waves-effect waves-light btn" 
+            onclick="go()"
+            disabled
+          >SUBMIT
+          </button>
+        </div>
+
+      </div>
+
+    </form>
+    <div class="col s2"></div>
+  </div>
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+
+  <script>
+    // prevent default
+    $('form').submit(function(e){
+        return false;
+    });
+
+var loader = `
+  <div class="preloader-wrapper small active">
+    <div class="spinner-layer spinner-green-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+`
+
+var success_html = `
+        <h2>THANK YOU!</h2>
+        <p>SEE YOUR POST AT <a href="http://localhost:3000/liveboard">http://localhost.com:3000/liveboard </a>
+        <br/>
+        OR <a href="http://localhost:3000/">SEND ANOTHER ONE?</a> 
+        </p>
+`
+
+var unsent_html = `
+          <input oninput ="handleChange()" id="input_text" type="text" data-length="20">
+          <label for="input_text">CAN YOU DESCRIBE YOUR FEELINGS</label>
+          <button 
+            id='subBtn'
+            type="submit" 
+            class="waves-effect waves-light btn" 
+            onclick="go()"
+            disabled
+          >SUBMIT
+          </button>
+`
+
+    var nextStage = () => {
+      $('#display_area').replaceWith(success_html)
+    }
+    var reset = () => {
+      $('#display_area').replaceWith(unsent_html)
+    }
+    var go = (e) => {
+      console.log($('#input_text').val())
+      var text = $('#input_text').val()
+      enableInput(false)
+      enableBtn(false)
+      $('#subBtn').replaceWith(loader)
+
+      // post
+      var URL = 'http://localhost:3000/api/messages'
+      $.post( URL, { text })
+        .done(function( data ) {
+          console.log( data );
+          nextStage()
+        });
+    }
+
+    var enableInput = (bool) => {
+      $('#input_text').prop('disabled', !bool);
+    }
+
+    var enableBtn = (bool) => {
+      $('#subBtn').prop('disabled', !bool);
+    }
+
+    var handleChange = () => {
+      var text = $('#input_text').val()
+      if (text !== '') {
+        enableBtn(true)
+      }
+      if (text === '') {
+        enableBtn(false)
+      }
+    }
+
+  </script>
+</body>
+
+</html>
