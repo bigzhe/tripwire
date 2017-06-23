@@ -18,7 +18,7 @@ const App = () => (
         <Grid.Row>
           <Grid.Column>
             <Grid.Row>
-              <LogGenerator />
+              {/*<LogGenerator />*/}
             </Grid.Row>
             <br/>
             <br/>

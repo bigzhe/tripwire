@@ -31,7 +31,7 @@ const ModelPresenter = ({model, presentFilter, dispatchSetPresentFilter, attackP
         </Container>
       :
         <Container>
-          <StatePresenter key={id} {...{id,users,pattern: attackPattern.pattern1[id]}} />
+          <StatePresenter key={id} {...{id,users,pattern: attackPattern[id]}} />
         </Container>
       }
     </Container>

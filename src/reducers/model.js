@@ -107,6 +107,9 @@ const model = (state = initialState, action) => {
       const froms = Array.from(new Set(action.moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(action.moves.map((m) => m.to)));
 
+      // when the user id is not in the state
+      state.UserView[action.id] = state.UserView[action.id] || []
+
       const updatedUserView = state.UserView[action.id].reduce((total, current) => {
         if (!tos.includes(current.id) && 
             !froms.includes(current.id) &&

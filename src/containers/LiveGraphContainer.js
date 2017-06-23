@@ -4,15 +4,18 @@ import {
   changeColor,
   changeSymbolType,
   userMoveTo,
+  userMoveToMultiple,
   changeSize,
   updateLabel,
-  setPresentFilter
+  setPresentFilter,
+  setVisibilityFilter,
 } from '../actions'
 import LiveGraph from '../components/LiveGraph'
 
 const mapStateToProps = (state) => {
   return {
     model: state.model, attackPattern: state.attackPattern,
+    visibilityFilter: state.visibilityFilter
     // graphConfig: state.graphConfig
   }
 }
@@ -28,6 +31,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatchUserMoveTo: (id, moveFrom, moveTo, expirationTime) => {
     dispatch(userMoveTo(id, moveFrom, moveTo, expirationTime))
   },
+  dispatchUserMoveToMultiple: (id, moves) => {
+    dispatch(userMoveToMultiple(id, moves))
+  },
   dispatchChangeSize: (id, size) => {
     dispatch(changeSize(id, size))
   },
@@ -39,6 +45,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dispatchSetPresentFilter: (showType, id) => {
     dispatch(setPresentFilter(showType, id))
+  },
+  dispatchSetVisibilityFilter: (pattern) => {
+    dispatch(setVisibilityFilter(pattern))
   },
 })
 

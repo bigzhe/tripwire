@@ -47,7 +47,7 @@ export const zipMODEL = (MODEL) => {
 //
 // ─── PASER ──────────────────────────────────────────────────────────────────────
 //
-// TODO: get all initial states
+// get all initial states
 const getIntialStates = (pattern) => {
   let result = []
   Object.entries(pattern).forEach(([key, value]) => {
@@ -99,7 +99,6 @@ export const parseLog = (model, {id, pc, action, date}) => {
 //
 
   
-
 const sizeOfANode = (s, state) => state.StateView[s].length * 100 + 120
 const labelOfANode = (s, state) => s + '\n' + state.StateView[s].join(', ')
 
