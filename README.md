@@ -1,7 +1,7 @@
 # tripwire
 The MSc project
 
-## Installation & Deployment
+## Installation and deployment
 
 Check this [article](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-14-04
 ) before you start.
@@ -34,13 +34,13 @@ npm install webpack-dev-server --save
 - `npm install`
 - `webpack`
 
-Since the npm library react-d3-graph is customised, you need install it manully. Change directory to `node_modules/react-d3-graph` and execute `npm install`.
-
-Then, the installation is completed.
+Since the npm library react-d3-graph is customised, you need install it manully. 
+- `cd ./node_modules/react-d3-graph` 
+- `npm install`.
 
 ### Deployment
 
-Install the nginx and change its configuration by `sudo emacs /etc/nginx/sites-available/default`
+Install the nginx and change its configuration by `sudo emacs /etc/nginx/sites-available/default`. Delete all content and paste 
 
 ```
 server {
