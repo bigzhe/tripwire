@@ -5,8 +5,7 @@ import config from './webpack.config.babel';
 import express from 'express';
 
 import { TARGET_URL } from './server/config.js'
-
-
+import AttackPattern from './server/attackPattern.js'
 
 var mongoose   = require('mongoose');
 var socket_io = require('socket.io');
@@ -58,23 +57,20 @@ mongoose.connect('mongodb://admin:123456@ds129352.mlab.com:29352/message'); // c
 
 var Message = require('./models/message');
 const Log = require('./models/log')
+const Model = require('./models/model')
 
 // router
 var router = express.Router();
 
 router.route('/logs')
     .post((req, res) => {
-        const log = new Log()
+        let log = new Log()
         
         log.id = req.body.id
         log.pc = req.body.pc
         log.action = req.body.action
         log.date = new Date(req.body.date) // parse the date string to Date object
-
-        console.log(req.body)
-        console.log(log)
-
-        
+       
 
         // TODO: parse the log and maybe store the tripwire rather than store the log
 
@@ -93,6 +89,44 @@ router.route('/logs')
                 res.send(err);
             // console.log('send back' + messages)
             res.json(logs);
+        });
+    })
+
+router.route('/model')
+    .post((req, res) => {
+        let model = new Model()
+
+        console.log('-----------------------')
+        console.log(req.body)
+
+        model.user_id = req.body.user_id
+        model.state_id = req.body.state_id
+        model.expiration_time = new Date(req.body.expiration_time)
+        console.log(model.expiration_time, req.body.expiration_time)
+        // model.expiration_time = Date.now()
+        console.log(model.expiration_time)
+
+        model.save((err, m) => {
+            if (err)
+                res.send(err)
+            console.log('**********************')
+            console.log(m)
+            // res.json({ message: 'Model saved'})
+            res.json(m)
+            // TODO: io.emit all client some model changed here
+        })
+
+    }).get((req, res) => {
+        Model.find(function(err, model) {
+            if (err)
+                res.send(err);
+            // console.log('send back' + messages)
+
+            // TODO: transfer the model to the form
+
+
+
+            res.json(model);
         });
     })
 
