@@ -6,6 +6,7 @@ import express from 'express';
 
 import { TARGET_URL } from './server/config.js'
 import AttackPattern from './server/attackPattern.js'
+import { unzipMODEL } from './server/util.js'
 
 var mongoose   = require('mongoose');
 var socket_io = require('socket.io');
@@ -65,7 +66,8 @@ Model.find(function(err, MODEL) {
     if (err)
         res.send(err);
 
-    // console.log(MODEL)
+    // TODO: transfer the model to the form
+    MODEL = unzipMODEL(MODEL)
 
     // router
     var router = express.Router();
@@ -125,17 +127,18 @@ Model.find(function(err, MODEL) {
             })
 
         }).get((req, res) => {
-            Model.find(function(err, model) {
-                if (err)
-                    res.send(err);
-                // console.log('send back' + messages)
+            res.json(MODEL)
+            // Model.find(function(err, model) {
+            //     if (err)
+            //         res.send(err);
+            //     // console.log('send back' + messages)
 
-                // TODO: transfer the model to the form
+            //     // TODO: transfer the model to the form
 
 
 
-                res.json(model);
-            });
+            //     res.json(model);
+            // });
         })
 
     router.route('/messages')
