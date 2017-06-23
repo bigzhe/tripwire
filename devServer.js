@@ -6,12 +6,19 @@ import express from 'express';
 
 import { TARGET_URL } from './server/config.js'
 import AttackPattern from './server/attackPattern.js'
-import { unzipMODEL } from './server/util.js'
+import { zipMODEL, unzipMODEL, modelReducer, parseLog } from './server/util.js'
 
-var mongoose   = require('mongoose');
 var socket_io = require('socket.io');
+var storage = require('node-persist');
+
+//you must first call storage.initSync
+storage.initSync({
+    dir: 'server/persist'
+});
+
 
 var bodyParser = require('body-parser')
+
 
 
 const app = new express();
@@ -52,183 +59,64 @@ app.use(webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath,
 }));
 
+let MODEL = storage.getItemSync('MODEL')
+// transfer the model to the form
+MODEL = unzipMODEL(MODEL)
+console.log('-------unzipped MODEL---------------');
+console.log(MODEL);
+console.log('------------------------------------');
 
-// database
-mongoose.connect('mongodb://admin:123456@ds129352.mlab.com:29352/message'); // connect to our database
+// router
+var router = express.Router();
 
-var Message = require('./models/message');
-const Log = require('./models/log')
-const Model = require('./models/model')
-
-
-// anyway, get the model first
-Model.find(function(err, MODEL) {
-    if (err)
-        res.send(err);
-
-    // TODO: transfer the model to the form
-    MODEL = unzipMODEL(MODEL)
-
-    // router
-    var router = express.Router();
-
-    router.route('/logs')
-        .post((req, res) => {
-            let log = new Log()
-            
-            log.id = req.body.id
-            log.pc = req.body.pc
-            log.action = req.body.action
-            log.date = new Date(req.body.date) // parse the date string to Date object
+router.route('/logs')
+    .post((req, res) => {
+        let log = {}
         
+        log.id = req.body.id
+        log.pc = req.body.pc
+        log.action = req.body.action
+        log.date = new Date(req.body.date) // parse the date string to Date object
+    
 
-            // TODO: parse the log and maybe store the tripwire rather than store the log
+        // TODO: parse the log and maybe store the tripwire rather than store the log
 
-            // TODO: update the model using the log
 
-            // log.save((err, m) => {
-                // if (err)
-                    // res.send(err)
-                // res.json({ log: 'Log saved'})
-                
-            // })
-            res.json({ log: 'Log saved'})
-        }).get((req, res) => {
-            Log.find(function(err, logs) {
-                if (err)
-                    res.send(err);
-                // console.log('send back' + messages)
-                res.json(logs);
-            });
+
+
+        // update the model using the log
+        let moves = parseLog(MODEL, log)
+
+        console.log('------MOVES-------------------------');
+        console.log(moves);
+        console.log('------------------------------------');
+       
+        MODEL = modelReducer(MODEL, {
+            type: 'USER_MOVE_TO_MULTIPLE',
+            id: log.id,
+            moves
         })
 
-    router.route('/model')
-        .post((req, res) => {
-            let model = new Model()
+        // store the new model
+        storage.setItemSync('MODEL', zipMODEL(MODEL))
 
-            console.log('-----------------------')
-            console.log(req.body)
+        // TODO: notify clients
 
-            model.user_id = req.body.user_id
-            model.state_id = req.body.state_id
-            model.expiration_time = new Date(req.body.expiration_time)
-            console.log(model.expiration_time, req.body.expiration_time)
-            // model.expiration_time = Date.now()
-            console.log(model.expiration_time)
+        res.json(MODEL)
+        // res.json({ log: 'Log saved'})
+    })
 
-            model.save((err, m) => {
-                if (err)
-                    res.send(err)
-                console.log('**********************')
-                console.log(m)
-                // res.json({ message: 'Model saved'})
-                res.json(m)
-                // TODO: io.emit all client some model changed here
-            })
+router.route('/model')
+    .get((req, res) => {
+        res.json(MODEL)
+    })
 
-        }).get((req, res) => {
-            res.json(MODEL)
-            // Model.find(function(err, model) {
-            //     if (err)
-            //         res.send(err);
-            //     // console.log('send back' + messages)
+app.use('/api', router);
 
-            //     // TODO: transfer the model to the form
-
-
-
-            //     res.json(model);
-            // });
-        })
-
-    router.route('/messages')
-        .post(function(req, res) {
-
-            var message = new Message();
-            message.text = req.body.text;  // set the bears name (comes from the request)
-            message.value = req.body.value;  // set the bears name (comes from the request)
-
-            // save the bear and check for errors
-            message.save(function(err, m) {
-                if (err)
-                    res.send(err);
-                res.json({ message: 'Message created!' });
-                io.emit('action', {type: 'ADD_MESSAGE', data: {_id: m.id, text: message.text}})
-            });
-
-        })
-        .get(function(req, res) {
-            Message.find(function(err, messages) {
-                if (err)
-                    res.send(err);
-                // console.log('send back' + messages)
-                res.json(messages);
-            });
-        })
-        .delete(function(req, res) {
-            Message.remove({}, function(err, message) {
-                if (err)
-                    res.send(err)
-                io.emit('action', {type: 'DELETE_ALL_MESSAGES'})
-                
-            })
-        })
-    router.route('/messages/:message_id')
-        .get(function(req, res) {
-            Message.findById(req.params.message_id, function(err, message) {
-                if (err)
-                    res.send(err);
-                res.json(message);
-
-                res.json({ message: 'Successfully get' });
-                
-            });
-        })
-        .put(function(req, res) {
-
-            // use our bear model to find the bear we want
-            Message.findById(req.params.message_id, function(err, message) {
-
-                if (err)
-                    res.send(err);
-
-                console.log(req.body)
-                message.text = req.body.text;  // update the bears info
-
-                // save the bear
-                message.save(function(err, m) {
-                    if (err)
-                        res.send(err);
-
-                    res.json({ message: 'message updated!' });
-                    io.emit('action', {type: 'UPDATE_MESSAGE', data: {_id: m.id, text: message.text}})
-                });
-
-            });
-        })
-        .delete(function(req, res) {
-            Message.remove({
-                _id: req.params.message_id
-            }, function(err, message) {
-                if (err)
-                    res.send(err);
-
-                res.json({ message: 'Successfully deleted' });
-                io.emit('action', {type: 'DELETE_MESSAGE', _id: req.params.message_id})
-            });
-        });
-
-
-
-    app.use('/api', router);
-
-    app.get('/*', (req, res) => {
-    console.log('sent root')
-    io.emit('action', {type: 'message', data: 'someone linked to the server'})
-    res.sendFile(path.join(__dirname, 'index.html'));
-    });
-
-
-})
+app.get('/*', (req, res) => {
+console.log('sent root')
+io.emit('action', {type: 'message', data: 'someone linked to the server'})
+res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 

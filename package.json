@@ -15,8 +15,10 @@
   "dependencies": {
     "babel-polyfill": "^6.3.14",
     "body-parser": "^1.17.2",
+    "json-fs-store": "^1.0.1",
     "material-ui": "^0.18.3",
     "mongoose": "^4.10.6",
+    "node-persist": "^2.0.11",
     "react": "^15.0.2",
     "react-d3-cloud": "^0.4.1",
     "react-dom": "^15.0.2",

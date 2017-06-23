@@ -1,5 +1,4 @@
 const AttackPattern = {
-  pattern1: {
     s1: {
       id: 's1',
       isInitial: true,
@@ -9,6 +8,7 @@ const AttackPattern = {
       fx: 100,
       canCommit: (user, action) => true,
       // fy: 700,
+      pattern: 'pattern1',
     },
     s2: {
       id: 's2',
@@ -18,6 +18,7 @@ const AttackPattern = {
       children: ['s4'],
       fx: 350,
       canCommit: (user, action) => true,
+      pattern: 'pattern1',
     },
     s3: {
       id: 's3',
@@ -25,6 +26,7 @@ const AttackPattern = {
       info: '',
       children: ['s4', 's5'],
       canCommit: (user, action) => action.includes('s3'),
+      pattern: 'pattern1',
     },
     s4: {
       id: 's4',
@@ -33,7 +35,8 @@ const AttackPattern = {
       children: ['s5'],
       fx: 220,
       fy: 353,
-      canCommit: (user, action) => action.includes('s4')
+      canCommit: (user, action) => action.includes('s4'),
+      pattern: 'pattern1',
     },
     s5: {
       id: 's5',
@@ -42,12 +45,8 @@ const AttackPattern = {
       info: 'The outcome',
       children: [],
       canCommit: (user, action) => action.includes('s5'),
+      pattern: 'pattern1',
     },
-
-  },
-  pattern2: {
-
-  }
 
 };
 
