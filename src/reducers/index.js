@@ -1,14 +1,22 @@
-import { combineReducers } from 'redux';
-// import todos from './todos';
-// import visibilityFilter from './visibilityFilter';
-import message from './message'
-import sendingStatus from './sendingStatus'
+import { combineReducers } from 'redux'
+import todos from './todos'
+import visibilityFilter from './visibilityFilter'
+import model from './model'
+// import graphConfig from './graphConfig'
+import attackPattern from './attackPattern'
+import log from './log'
+import snackbar from './snackbar'
+import presentFilter from './presentFilter'
 
-const reducers = combineReducers({
-  // todos,
-  // visibilityFilter,
-  message,
-  sendingStatus,
-});
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter,
+  model,
+  // graphConfig,
+  log,
+  attackPattern,
+  snackbar,
+  presentFilter,
+})
 
-export default reducers;
+export default todoApp

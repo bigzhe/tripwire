@@ -13,8 +13,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import reducers from './reducers';
 import App from './components/App';
-import LiveboardContainer from './containers/LiveboardContainer'
-import DashboardContainer from './containers/DashboardContainer'
 
 import { TARGET_URL } from './config'
 
@@ -37,9 +35,8 @@ render (
     <BrowserRouter>
       <MuiThemeProvider >
       <div>
-        {/*<Route exact path="/" component={App} />*/}
+        <Route exact path="/" component={App} />
         {/*<Route path="/liveboard" component={LiveboardContainer} />*/}
-        <Route path="/dashboard" component={DashboardContainer} />
       </div>
       </MuiThemeProvider>
     </BrowserRouter>
