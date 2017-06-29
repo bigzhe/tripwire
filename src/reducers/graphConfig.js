@@ -2,7 +2,7 @@ const initialState = {
     width: 500,
     height: 800,
     automaticRearrangeAfterDropNode: true,
-    // staticGraph: true,
+    staticGraph: true,
     highlightBehavior: true,
     highlightOpacity: 0.25,
     node: {

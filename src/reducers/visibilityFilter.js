@@ -1,4 +1,4 @@
-const visibilityFilter = (state = 'pattern2', action) => {
+const visibilityFilter = (state = 'pattern1', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
       return action.filter;
