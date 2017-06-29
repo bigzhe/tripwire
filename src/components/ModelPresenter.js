@@ -21,18 +21,23 @@ const ModelPresenter = ({model, presentFilter, dispatchSetPresentFilter, attackP
         <Menu.Item name='Node' active={presentFilter.showType === 'StateView'} onClick={() => dispatchSetPresentFilter('StateView')} />
       </Menu>
 
-      {presentFilter.showType === 'UserView' ?
-        <Container>
-          {
-            Object.entries(model.UserView).map(([user,positions]) => 
-              <UserPresenter key={user} {...{user,positions}} />
-            )
-          }
-        </Container>
-      :
-        <Container>
-          <StatePresenter key={id} {...{id,users,pattern: attackPattern[id]}} />
-        </Container>
+      {
+      (model !== 'Loading' && attackPattern !== 'Loading') ?
+        presentFilter.showType === 'UserView' ?
+          <Container>
+            {
+              Object.entries(model.UserView).map(([user,positions]) => 
+                <UserPresenter key={user} {...{user,positions}} />
+              )
+            }
+          </Container>
+        :
+          <Container>
+            <StatePresenter key={id} {...{id,users,pattern: attackPattern[id]}} />
+          </Container>
+        
+        :
+        <Header>Loading</Header>
       }
     </Container>
   )

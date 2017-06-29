@@ -80,6 +80,7 @@ router.route('/logs')
     
 
         // TODO: parse the log and maybe store the tripwire rather than store the log
+        // this is the place for the real world cases
 
 
 
@@ -103,12 +104,15 @@ router.route('/logs')
         // TODO: notify clients
 
         res.json(MODEL)
-        // res.json({ log: 'Log saved'})
+        // res.json({ log: 'Log processed'})
     })
 
 router.route('/model')
     .get((req, res) => {
-        res.json(MODEL)
+        res.json({
+            model: MODEL,
+            attackPattern: AttackPattern
+        })
     })
 
 app.use('/api', router);

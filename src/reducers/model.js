@@ -42,6 +42,25 @@ const initialState = {
   },
 };
 
+const GraphConfig = {
+    width: 500,
+    height: 800,
+    automaticRearrangeAfterDropNode: true,
+    // staticGraph: true,
+    highlightBehavior: true,
+    highlightOpacity: 0.25,
+    node: {
+      color: 'lightgreen',
+      size: 120,
+      // highlightStrokeColor: 'blue'
+    },
+    link: {
+      // highlightColor: 'lightblue'
+    },
+    updatedConfig: {
+
+    }
+  }
 
 const sizeOfANode = (s, state) => state.StateView[s].length * 100 + 120
 const labelOfANode = (s, state) => s + '\n' + state.StateView[s].join(', ')
@@ -89,8 +108,13 @@ const insertState = (id, arr) => {
 }
 
 
-const model = (state = initialState, action) => {
+const model = (state = 'Loading', action) => {
   switch (action.type) {
+    case 'INIT_MODEL':
+      return {
+        ...action.data,
+        GraphConfig,
+      }
     case 'USER_MOVE_TO_MULTIPLE':
       // action.id
       // action.moves 

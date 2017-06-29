@@ -10,7 +10,9 @@ import {
   setPresentFilter,
   setVisibilityFilter,
 } from '../actions'
+import * as api from '../api'
 import LiveGraph from '../components/LiveGraph'
+
 
 const mapStateToProps = (state) => {
   return {
@@ -21,6 +23,16 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchModel: () => {
+    return api.fetchModel().then(
+      response => {
+        dispatch({type: 'INIT_MODEL', data: response.model})
+        dispatch({type: 'INIT_ATTACKPATTERN', data: response.attackPattern})
+      }, error => {
+        console.log('fetch error')
+      }
+    )
+  },
   // dispatchLog: (log) => { dispatch(parseLog(log)) },
   dispatchChangeColor: (id, color) => {
     dispatch(changeColor(id, color))

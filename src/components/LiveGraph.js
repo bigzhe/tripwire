@@ -64,20 +64,17 @@ class LiveGraph extends Component {
         text: 'pattern ' + k
       }
     })
-
-    let flag = visibilityFilter === 'pattern2'
-    let data = patternToGraphData(filterPattern(attackPattern, visibilityFilter))
     console.log('------------------------------------');
-    console.log(data);
+    console.log(attackPattern);
     console.log('------------------------------------');
 
     return (
       <div>
-        
+       
         <Header >
           Graph
           <Header.Subheader>
-            Current rendering patter: {visibilityFilter}
+            Current rendering patter
           </Header.Subheader>
         </Header>
         <Form.Field>
@@ -92,20 +89,26 @@ class LiveGraph extends Component {
                 dispatchSetVisibilityFilter(p.value)
             }}/>
         </Form.Field>
+        <br/>
         <div style={{
           border: '1px dashed black'
         }}>
-        { patternData.map((p) => 
-            <div key={p.key} hidden={visibilityFilter !== p.key}>
-              <Graph
-                id={'live-graph'+p.key}
-                data={patternToGraphData(filterPattern(attackPattern, p.key))}
-                config={model.GraphConfig}
-                onClickNode={onClickNode}
-                onScrollPassive={this.onScrollPassive}
-              />
-            </div>
-          )
+        { 
+          (model !== 'Loading' && attackPattern !== 'Loading') ?
+          
+            patternData.map((p) => 
+              <div key={p.key} hidden={visibilityFilter !== p.key}>
+                <Graph
+                  id={'live-graph'+p.key}
+                  data={patternToGraphData(filterPattern(attackPattern, p.key))}
+                  config={model.GraphConfig}
+                  onClickNode={onClickNode}
+                  onScrollPassive={this.onScrollPassive}
+                />
+              </div>
+            )
+          :
+          <Header>Loading</Header>
         }
         </div>
       </div>
