@@ -135,13 +135,15 @@ export const modelReducer = (state, action) => {
       const froms = Array.from(new Set(action.moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(action.moves.map((m) => m.to)));
 
+
       // when the user id is not in the state
       state.UserView[action.id] = state.UserView[action.id] || []
 
       const updatedUserView = state.UserView[action.id].reduce((total, current) => {
         if (!tos.includes(current.id) && 
-            !froms.includes(current.id) &&
-          new Date() < current.expirationTime ) {
+            !froms.includes(current.id) ){ // &&
+          // new Date() < current.expirationTime ) {
+          // TODO: consider the expiration time here
           // not expired
           // id is not duplicated
           // moveFrom
@@ -152,6 +154,7 @@ export const modelReducer = (state, action) => {
           .map((t) => {return {id: t.to, expirationTime: t.expirationTime}}))
 
       // state view
+      // TODO: consider the expiration time
       let updatedStateView = {...state.StateView}
       // console.log(state.StateView)
 

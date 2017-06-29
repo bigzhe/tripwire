@@ -81,7 +81,7 @@ router.route('/logs')
 
         // TODO: parse the log and maybe store the tripwire rather than store the log
         // this is the place for the real world cases
-
+        log.action = log.action.split(' ')
 
 
 
@@ -102,6 +102,11 @@ router.route('/logs')
         storage.setItemSync('MODEL', zipMODEL(MODEL))
 
         // TODO: notify clients
+        io.emit('action', {
+            type: 'USER_MOVE_TO_MULTIPLE',
+            id: log.id,
+            moves
+        })
 
         res.json(MODEL)
         // res.json({ log: 'Log processed'})
@@ -113,6 +118,11 @@ router.route('/model')
             model: MODEL,
             attackPattern: AttackPattern
         })
+    })
+    .delete((req, res) => {
+        storage.removeItemSync('MODEL')
+        MODEL = unzipMODEL(undefined)
+        res.send('Done')
     })
 
 app.use('/api', router);

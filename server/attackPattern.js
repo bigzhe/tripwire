@@ -6,7 +6,7 @@ const AttackPattern = {
       info: '',
       children: ['s3', 's4'],
       fx: 100,
-      canCommit: (user, action) => true,
+      canCommit: (user, action) => action.includes('s1'),
       // fy: 700,
       pattern: 'pattern1',
     },
@@ -17,7 +17,7 @@ const AttackPattern = {
       info: '',
       children: ['s4'],
       fx: 350,
-      canCommit: (user, action) => true,
+      canCommit: (user, action) => action.includes('s2'),
       pattern: 'pattern1',
     },
     s3: {
