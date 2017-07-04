@@ -10,7 +10,11 @@ const ModelPresenter = ({model, presentFilter, dispatchSetPresentFilter, attackP
     users = model.StateView[presentFilter.id]
   }
     
-  console.log(id, users)
+  
+  console.log('------------------------------------');
+  if (id)
+    console.log(attackPattern.states[id]);
+  console.log('------------------------------------');
   return (
     <Container>
       <Header >
@@ -33,7 +37,7 @@ const ModelPresenter = ({model, presentFilter, dispatchSetPresentFilter, attackP
           </Container>
         :
           <Container>
-            <StatePresenter key={id} {...{id,users,pattern: attackPattern[id]}} />
+            <StatePresenter key={id} {...{id,users,pattern: attackPattern.states[id]}} />
           </Container>
         
         :

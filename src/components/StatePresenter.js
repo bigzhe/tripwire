@@ -26,7 +26,12 @@ const StatePresenter = ({id, users, pattern}) => {
       <List bulleted>
         {Object.entries(pattern).map(([k,v])=> 
           <List.Item key={k}>
-            {k}: {v}
+            {k}: {k === 'timeout' ? 
+              Object.entries(v).map(([k2, v2]) => 
+                <List.Item key={k2}>{k2}: {v2}</List.Item>
+              )
+            : 
+            v}
           </List.Item>
           )}
       </List>
