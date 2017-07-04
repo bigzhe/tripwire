@@ -19,7 +19,7 @@ const AttackPattern = {
       children: ['s3', 's4'],
       timeout: {
         s3: 4000000,
-        s4: 50000,
+        s4: 5000000,
       },
       fx: 100,
       canCommit: (user, action) => action.includes('s1'),

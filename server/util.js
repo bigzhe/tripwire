@@ -75,25 +75,33 @@ export const parseLog = (model, {id, pc, action, date}) => {
   // dispatchUserMoveTo(id, moveFrom, moveTo, severalHoursLater(2))
   let user = id
   let moves = []
+
+  let map = {}
   // TODO: consider the expiration time here
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
       pattern[s.id].children.forEach((c) => {
-        // time out 
-        console.log('------------------------------------');
-        console.log( Date.now() - s.commitTime);
-        console.log('------------------------------------');
         // can commit
         if (pattern[c].canCommit(user, action)  ) {
           // not expired
           if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
-            moves.push({from: s.id, to: c, commitTime: Date.now()})
+            console.log('not expired')
+            // when two moves to the same node
+            if (!map[c] || map[c].commitTime < s.commitTime) { // use the larger (later) commit time
+              map[c] = {...s}
+              // id
+              // commitTime
+            }
           }
         }
       })
     })
   }
+  // moves.push({from: s.id, to: c, commitTime: Date.now()})
+  Object.entries(map).forEach(([k, v]) => {
+    moves.push({from: v.id, to: k, commitTime: Date.now()})
+  })
   initialStates.forEach((c) => {
       if (pattern[c].canCommit(user, action)) {
         moves.push({from: undefined , to: c, commitTime: Date.now()})
@@ -188,56 +196,6 @@ export const modelReducer = (state, action) => {
         StateView: updatedStateView,
       }
 
-
-    case 'USER_MOVE_TO':    
-      // action.id - user id
-      // action.moveFrom
-      // action.moveTo
-
-      // update UserView
-      let targetUser = [
-        ...state.UserView[action.id]
-      ]
-
-      const updatedUser = targetUser.reduce((total, current) => {
-        
-        if (current.id !== action.moveTo && 
-          current.id !== action.moveFrom &&
-          new Date() < current.expirationTime ) {
-          // not expired
-          // id is not duplicated
-          // moveFrom
-          total.push(current)
-        }
-        return total
-      }, [{id: action.moveTo, expirationTime: action.expirationTime}])
-
-      // insert Userview and update StateView
-
-      const updatedState = {
-        ...state,
-        UserView: {
-          ...state.UserView,
-          [action.id]: updatedUser,
-        },
-        StateView: {
-          ...state.StateView,
-          [action.moveFrom]: removeState(action.id, state.StateView[action.moveFrom]),
-          [action.moveTo]: insertState(action.id, state.StateView[action.moveTo]),
-        },
-        
-      }
-
-      // then we do the statistic and update the graphConfig
-
-      return updatedStateWithConfig(
-        [action.moveFrom, action.moveTo],
-        updatedState,
-        {
-          size: sizeOfANode,
-          label: labelOfANode
-        }
-      )
 
     default:
       return state
