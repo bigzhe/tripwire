@@ -13,12 +13,12 @@ export const unzipMODEL = (MODEL) => {
   const Track = MODEL.track || {}
 
   let UserView = {}, StateView = {}
-  Model.forEach(({user_id, state_id, expiration_time}) => {
+  Model.forEach(({user_id, state_id, commitTime}) => {
     // update UserView
     UserView[user_id] = UserView[user_id] || []
     UserView[user_id].push({
       id: state_id,
-      expirationTime: expiration_time
+      commitTime: commitTime
     })
 
     // update StateView
@@ -80,8 +80,16 @@ export const parseLog = (model, {id, pc, action, date}) => {
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
       pattern[s.id].children.forEach((c) => {
-        if (pattern[c].canCommit(user, action)) {          
-          moves.push({from: s.id, to: c, commitTime: Date.now()})
+        // time out 
+        console.log('------------------------------------');
+        console.log( Date.now() - s.commitTime);
+        console.log('------------------------------------');
+        // can commit
+        if (pattern[c].canCommit(user, action)  ) {
+          // not expired
+          if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
+            moves.push({from: s.id, to: c, commitTime: Date.now()})
+          }
         }
       })
     })
