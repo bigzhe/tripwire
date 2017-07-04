@@ -137,7 +137,8 @@ const model = (state = 'Loading', action) => {
       const updatedUserView = state.UserView[action.id].reduce((total, current) => {
         if (!tos.includes(current.id) && 
             !froms.includes(current.id) &&
-          new Date() < current.expirationTime ) {
+            true ){
+          // new Date() < current.expirationTime ) {
           // not expired
           // id is not duplicated
           // moveFrom
@@ -145,7 +146,7 @@ const model = (state = 'Loading', action) => {
         }
         return total
       }, action.moves.filter((elem, pos, arr) => pos === arr.findIndex((e) => e.to === elem.to))
-          .map((t) => {return {id: t.to, expirationTime: t.expirationTime}}))
+          .map((t) => {return {id: t.to, commitTime: t.commitTime}}))
 
       // state view
       let updatedStateView = {...state.StateView}

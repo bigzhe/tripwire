@@ -75,19 +75,20 @@ export const parseLog = (model, {id, pc, action, date}) => {
   // dispatchUserMoveTo(id, moveFrom, moveTo, severalHoursLater(2))
   let user = id
   let moves = []
+  // TODO: consider the expiration time here
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
       pattern[s.id].children.forEach((c) => {
         if (pattern[c].canCommit(user, action)) {          
-          moves.push({from: s.id, to: c, expirationTime: Date.now()})
+          moves.push({from: s.id, to: c, commitTime: Date.now()})
         }
       })
     })
   }
   initialStates.forEach((c) => {
       if (pattern[c].canCommit(user, action)) {
-        moves.push({from: undefined , to: c, expirationTime: Date.now()})
+        moves.push({from: undefined , to: c, commitTime: Date.now()})
       }
   })
   // add moves to the initial states
@@ -147,7 +148,7 @@ export const modelReducer = (state, action) => {
         if (!tos.includes(current.id) && 
             !froms.includes(current.id) ){ // &&
           // new Date() < current.expirationTime ) {
-          // TODO: consider the expiration time here
+          
           // not expired
           // id is not duplicated
           // moveFrom
@@ -155,7 +156,7 @@ export const modelReducer = (state, action) => {
         }
         return total
       }, action.moves.filter((elem, pos, arr) => pos === arr.findIndex((e) => e.to === elem.to))
-          .map((t) => {return {id: t.to, expirationTime: t.expirationTime}}))
+          .map((t) => {return {id: t.to, commitTime: t.commitTime}}))
 
       // state view
       // TODO: consider the expiration time
