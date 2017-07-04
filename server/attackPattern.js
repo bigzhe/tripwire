@@ -18,8 +18,8 @@ const AttackPattern = {
       info: '',
       children: ['s3', 's4'],
       timeout: {
-        s3: 2,
-        s4: 5,
+        s3: 4000000,
+        s4: 50000,
       },
       fx: 100,
       canCommit: (user, action) => action.includes('s1'),
@@ -33,7 +33,7 @@ const AttackPattern = {
       info: '',
       children: ['s4'],
       timeout: {
-        s4: 3,
+        s4: 30000,
       },
       fx: 350,
       canCommit: (user, action) => action.includes('s2'),
@@ -45,8 +45,8 @@ const AttackPattern = {
       info: '',
       children: ['s4', 's5'],
       timeout: {
-        s4: 1,
-        s5: 10,
+        s4: 10000,
+        s5: 100000,
       },
       canCommit: (user, action) => action.includes('s3'),
       pattern: 'pattern1',
@@ -57,7 +57,7 @@ const AttackPattern = {
       info: '',
       children: ['s5'],
       timeout: {
-        s5: 10,
+        s5: 100000,
       },
       fx: 220,
       fy: 353,
