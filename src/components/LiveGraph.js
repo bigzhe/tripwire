@@ -100,7 +100,7 @@ class LiveGraph extends Component {
               <div key={p.key} hidden={visibilityFilter !== p.key}>
                 <Graph
                   id={'live-graph'+p.key}
-                  data={patternToGraphData(filterPattern(attackPattern, p.key))}
+                  data={patternToGraphData(filterPattern(attackPattern.states, p.key))}
                   config={model.GraphConfig}
                   onClickNode={onClickNode}
                   onScrollPassive={this.onScrollPassive}

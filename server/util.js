@@ -8,10 +8,12 @@ const insertWithDefault = (array, elem) => {
 }
 
 export const unzipMODEL = (MODEL) => {
-  MODEL = MODEL || []
+  MODEL = MODEL || {}
+  const Model = MODEL.Model || []
+  const Track = MODEL.track || {}
 
   let UserView = {}, StateView = {}
-  MODEL.forEach(({user_id, state_id, expiration_time}) => {
+  Model.forEach(({user_id, state_id, expiration_time}) => {
     // update UserView
     UserView[user_id] = UserView[user_id] || []
     UserView[user_id].push({
@@ -23,15 +25,16 @@ export const unzipMODEL = (MODEL) => {
     StateView[state_id] = StateView[state_id] || []
     StateView[state_id].push(user_id)
   })
-
-  return {UserView, StateView}
+  
+  return {UserView, StateView, Track}
 }
 
 export const zipMODEL = (MODEL) => {
   if (!MODEL)
-    return []
+    return {}
   let result = []
-  Object.entries(MODEL.UserView).forEach(([id, arr]) => {
+  const Model = MODEL.UserView || []
+  Object.entries(Model).forEach(([id, arr]) => {
     arr.forEach(a => {
       result.push({
         user_id: id,
@@ -40,7 +43,7 @@ export const zipMODEL = (MODEL) => {
       })
     })
   })
-  return result
+  return {Model: result, Track: MODEL.Track}
 }
 
 
@@ -67,22 +70,23 @@ const filterPattern = (pattern, target) => {
 }
 
 export const parseLog = (model, {id, pc, action, date}) => {
-  const initialStates = getIntialStates(AttackPattern)
+  const pattern = AttackPattern.states
+  const initialStates = getIntialStates(pattern)
   // dispatchUserMoveTo(id, moveFrom, moveTo, severalHoursLater(2))
   let user = id
   let moves = []
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
-      AttackPattern[s.id].children.forEach((c) => {
-        if (AttackPattern[c].canCommit(user, action)) {          
+      pattern[s.id].children.forEach((c) => {
+        if (pattern[c].canCommit(user, action)) {          
           moves.push({from: s.id, to: c, expirationTime: Date.now()})
         }
       })
     })
   }
   initialStates.forEach((c) => {
-      if (AttackPattern[c].canCommit(user, action)) {
+      if (pattern[c].canCommit(user, action)) {
         moves.push({from: undefined , to: c, expirationTime: Date.now()})
       }
   })
