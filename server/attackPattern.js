@@ -23,6 +23,7 @@ const AttackPattern = {
       },
       fx: 100,
       canCommit: (user, action) => action.includes('s1'),
+      parents: [],
       // fy: 700,
       pattern: 'pattern1',
     },
@@ -32,6 +33,7 @@ const AttackPattern = {
       label: 'Another initial state',
       info: '',
       children: ['s4'],
+      parents: [],
       timeout: {
         s4: 30000,
       },
@@ -44,6 +46,7 @@ const AttackPattern = {
       label: 'abc',
       info: '',
       children: ['s4', 's5'],
+      parents: ['s1'],
       timeout: {
         s4: 10000,
         s5: 100000,
@@ -56,6 +59,7 @@ const AttackPattern = {
       label: 'bcd',
       info: '',
       children: ['s5'],
+      parents: ['s1', 's2'],
       timeout: {
         s5: 100000,
       },
@@ -70,6 +74,7 @@ const AttackPattern = {
       label: 'Final state',
       info: 'The outcome',
       children: [],
+      parents: ['s3','s4'],
       canCommit: (user, action) => action.includes('s5'),
       pattern: 'pattern1',
     },

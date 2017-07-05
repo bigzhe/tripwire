@@ -144,11 +144,11 @@ export const modelReducer = (state, action) => {
       // action.id
       // action.moves 
       // [{
-      //   from: 's1', to: 's3', expirationTime
+      //   from: 's1', to: 's3', commitTime
       // }, {
-      //   from: 's1', to: 's4'
+      //   from: 's1', to: 's4', commitTime
       // }, {
-      //   from: 's3', to: 's4'
+      //   from: 's3', to: 's4', commitTime
       // }
       // ]
 
