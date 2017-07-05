@@ -8,12 +8,12 @@ const UserPresenter = ({user, positions}) => {
       <Header as="h5">{user}</Header>
       <List bulleted>
         {
-          positions.map(({id, expirationTime}) => 
+          positions.map(({id, commitTime}) => 
             <List.Item 
               key={id} 
               style={{
                 color: id === 's5' && 'red'
-              }}>Located in {id}, expired at {'' + expirationTime}</List.Item>
+              }}>Located in {id}, expired at {'' + commitTime}</List.Item>
           )
         }
       </List>

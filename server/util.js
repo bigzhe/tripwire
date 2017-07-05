@@ -10,7 +10,7 @@ const insertWithDefault = (array, elem) => {
 export const unzipMODEL = (MODEL) => {
   MODEL = MODEL || {}
   const Model = MODEL.Model || []
-  const Track = MODEL.track || {}
+  const Track = MODEL.Track || {}
 
   let UserView = {}, StateView = {}
   Model.forEach(({user_id, state_id, commitTime}) => {
@@ -152,6 +152,33 @@ export const modelReducer = (state, action) => {
       // }
       // ]
 
+      // update Track
+      const now = new Date()
+      let Track = {...state.Track}
+      Track[action.id] = Track[action.id] || {}
+
+      // dye the parent nodes with the target value to now
+      const dyeNodes = (currentNode, target, now) => {
+        if (Track[action.id][currentNode] !== target)
+          return
+        Track[action.id][currentNode] = now
+        const pattern = AttackPattern.states
+
+        pattern[currentNode].parents.forEach(parent => {
+          dyeNodes(parent, target, now)
+        })
+      }
+      action.moves.forEach(move => {
+        //   from: 's1', to: 's3', commitTime
+        Track[action.id][move.to] = now
+        if (move.from)
+          dyeNodes(move.from, Track[action.id][move.from], now)
+      })
+
+      console.log('------------------------------------');
+      console.log(Track);
+      console.log('------------------------------------');
+
       // user view
       const froms = Array.from(new Set(action.moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(action.moves.map((m) => m.to)));
@@ -186,6 +213,9 @@ export const modelReducer = (state, action) => {
       tos.forEach((t) => {
         updatedStateView[t] = insertState(action.id, updatedStateView[t])
       })
+
+
+
       
       return {
         ...state,
@@ -194,6 +224,7 @@ export const modelReducer = (state, action) => {
           [action.id]: updatedUserView,
         },
         StateView: updatedStateView,
+        Track,
       }
 
 

@@ -1,8 +1,13 @@
 import React from 'react'
 import {Container, Button, Header, List, Divider} from 'semantic-ui-react'
 
-const StatePresenter = ({id, users, pattern}) => {
+const StatePresenter = ({id, users, patterns}) => {
   // console.log(pattern)
+  const traceBack = (id) => {
+
+  }
+  let pattern = patterns[id]
+
   users = users || []
   return (
     <div>

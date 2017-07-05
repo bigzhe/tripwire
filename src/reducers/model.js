@@ -1,46 +1,4 @@
-const initialState = {
-  UserView: {
-    Sally: [
-      // {id: 's1', expirationTime: new Date(new Date().setHours(new Date().getHours() + 10))},
-      // {id: 's3', expirationTime: new Date(new Date().setHours(new Date().getHours() + 12))}
-    ],
-    Alice: [
-      // {id: 's3', expirationTime: new Date(new Date().setHours(new Date().getHours() + 12))}
-    ],
-    Bob: [
-      // {id: 's2', expirationTime: new Date(new Date().setHours(new Date().getHours() + 12))}
-    ]
-  },
-  StateView: {
-    s1: [],
-    s2: [],
-    s3: []
-  },
-  // StateView: {
-  //   s1: ['Sally'],
-  //   s2: ['Bob'],
-  //   s3: ['Sally', 'Alice']
-  // },
-  GraphConfig: {
-    width: 500,
-    height: 800,
-    automaticRearrangeAfterDropNode: true,
-    // staticGraph: true,
-    highlightBehavior: true,
-    highlightOpacity: 0.25,
-    node: {
-      color: 'lightgreen',
-      size: 120,
-      // highlightStrokeColor: 'blue'
-    },
-    link: {
-      // highlightColor: 'lightblue'
-    },
-    updatedConfig: {
-
-    }
-  },
-};
+import AttackPattern from '../../server/attackPattern'
 
 const GraphConfig = {
     width: 500,
@@ -127,6 +85,30 @@ const model = (state = 'Loading', action) => {
       // }
       // ]
 
+
+      // update Track
+      const now = new Date()
+      let Track = {...state.Track}
+      Track[action.id] = Track[action.id] || {}
+
+      // dye the parent nodes with the target value to now
+      const dyeNodes = (currentNode, target, now) => {
+        if (Track[action.id][currentNode] !== target)
+          return
+        Track[action.id][currentNode] = now
+        const pattern = AttackPattern.states
+
+        pattern[currentNode].parents.forEach(parent => {
+          dyeNodes(parent, target, now)
+        })
+      }
+      action.moves.forEach(move => {
+        //   from: 's1', to: 's3', commitTime
+        Track[action.id][move.to] = now
+        if (move.from)
+          dyeNodes(move.from, Track[action.id][move.from], now)
+      })
+
       // user view
       const froms = Array.from(new Set(action.moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(action.moves.map((m) => m.to)));
@@ -169,14 +151,17 @@ const model = (state = 'Loading', action) => {
         StateView: updatedStateView,
       }
 
-      return updatedStateWithConfig(
-        Array.from(new Set([...froms, ...tos])),
-        updatedModel,
-        {
-          size: sizeOfANode,
-          label: labelOfANode
-        }
-      )
+      return {
+        ...updatedStateWithConfig(
+          Array.from(new Set([...froms, ...tos])),
+          updatedModel,
+          {
+            size: sizeOfANode,
+            label: labelOfANode
+          }
+        ),
+        Track
+      }
 
     case 'USER_MOVE_TO':    
       // action.id - user id
