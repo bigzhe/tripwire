@@ -1,10 +1,33 @@
 import React from 'react'
 import {Container, Button, Header, List, Divider} from 'semantic-ui-react'
 
-const StatePresenter = ({id, users, patterns}) => {
+const StatePresenter = ({id, users, patterns, Track}) => {
   // console.log(pattern)
-  const traceBack = (id) => {
+  console.table(Track)
+  
+  const traceBack = (nodeId, userId) => {
+    if (Track[userId]['s4'] === Track[userId]['s2']) {
+      console.log('hahaha')
+    }
+    let result = []
+    const dfs = (currentNode, trace, target) => {
+      console.log(currentNode, trace);
+      if (Track[userId][currentNode] !== target) {
+        
+        result.push(trace)
+      } else {
+        if (patterns[currentNode].parents.length) {
+          patterns[currentNode].parents.forEach(parent => {
+            dfs(parent, [...trace, currentNode], target)
+          })
+        } else {
+          result.push([...trace, currentNode])
+        }
 
+      }
+    }
+    dfs(nodeId, [], Track[userId][nodeId])
+    console.table(result)
   }
   let pattern = patterns[id]
 
@@ -21,7 +44,7 @@ const StatePresenter = ({id, users, patterns}) => {
           users.map((user) => 
             <List.Item 
               key={user}>
-              {user}
+              <a href="#" onClick={() => traceBack(id, user)}>{user}</a>
             </List.Item>
           )
         }
