@@ -85,6 +85,21 @@ const model = (state = 'Loading', action) => {
       // }
       // ]
 
+      // filter the expired moves
+      const moves = []
+      action.moves.forEach(move => {
+        const pattern = AttackPattern.states
+      console.log('----MOVE--------------------------------');
+      console.log(move)
+      console.log(new Date() - new Date(move.fromTime), pattern[move.to].timeout);
+      console.log('------------------------------------');
+        if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
+          console.log('expired')
+          // TODO: handle the expired -- dfs to delete expired nodes
+        } else {
+          moves.push(move)
+        }
+      })
 
       // update Track
       const now = new Date()
@@ -102,7 +117,7 @@ const model = (state = 'Loading', action) => {
           dyeNodes(parent, target, now)
         })
       }
-      action.moves.forEach(move => {
+      moves.forEach(move => {
         //   from: 's1', to: 's3', commitTime
         Track[action.id][move.to] = now
         if (move.from)
@@ -110,33 +125,48 @@ const model = (state = 'Loading', action) => {
       })
 
       // user view
-      const froms = Array.from(new Set(action.moves.map((m) => m.from).filter((e) => e)));
-      const tos = Array.from(new Set(action.moves.map((m) => m.to)));
+      const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
+      const tos = Array.from(new Set(moves.map((m) => m.to)));
 
       // when the user id is not in the state
       state.UserView[action.id] = state.UserView[action.id] || []
+      const updatedUserView = [...state.UserView[action.id]]
 
-      const updatedUserView = state.UserView[action.id].reduce((total, current) => {
-        if (!tos.includes(current.id) && 
-            !froms.includes(current.id) &&
-            true ){
-          // new Date() < current.expirationTime ) {
-          // not expired
-          // id is not duplicated
-          // moveFrom
-          total.push(current)
+      const findTupleByState = (stateId) => {
+        return updatedUserView.find(elem => elem.id === stateId)
+      }
+      
+      moves.forEach(move => {
+        let targetTuple = findTupleByState(move.to)
+        console.log(targetTuple)
+        if (targetTuple) {
+          targetTuple.commitTime = new Date()
+        } else {
+          updatedUserView.push({id: move.to, commitTime: new Date()})
         }
-        return total
-      }, action.moves.filter((elem, pos, arr) => pos === arr.findIndex((e) => e.to === elem.to))
-          .map((t) => {return {id: t.to, commitTime: t.commitTime}}))
+      })
+
+      // const updatedUserView = state.UserView[action.id].reduce((total, current) => {
+      //   if (!tos.includes(current.id) && 
+      //       !froms.includes(current.id) &&
+      //       true ){
+      //     // new Date() < current.expirationTime ) {
+      //     // not expired
+      //     // id is not duplicated
+      //     // moveFrom
+      //     total.push(current)
+      //   }
+      //   return total
+      // }, moves.filter((elem, pos, arr) => pos === arr.findIndex((e) => e.to === elem.to))
+      //     .map((t) => {return {id: t.to, commitTime: t.commitTime}}))
 
       // state view
       let updatedStateView = {...state.StateView}
       // console.log(state.StateView)
 
-      froms.forEach((f) => {
-        updatedStateView[f]= removeState(action.id, updatedStateView[f])
-      })
+      // froms.forEach((f) => {
+      //   updatedStateView[f]= removeState(action.id, updatedStateView[f])
+      // })
 
       tos.forEach((t) => {
         updatedStateView[t] = insertState(action.id, updatedStateView[t])

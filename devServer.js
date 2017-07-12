@@ -83,8 +83,6 @@ router.route('/logs')
         // this is the place for the real world cases
         log.action = log.action.split(' ')
 
-
-
         // update the model using the log
         let moves = parseLog(MODEL, log)
 
