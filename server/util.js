@@ -138,11 +138,18 @@ const insertState = (id, arr) => {
   }
 }
 
-export const traceBack = (stateId, userId) => {
-  let result = []
-  let largest = Math.max(pattern[currentNode].parents.map(parent => Track[userId][currentNode + ' ' + parent]))
+ export const traceBack = (stateId, userId) => {
+  console.clear()
+  let result = [stateId]
+  const initialTransitions = patterns[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
+  const largest = initialTransitions.reduce((a,b) => {
+    return new Date(a) > new Date(b) ? a : b
+  })
+  // console.log('largest', largest)
+
   const dfs = (currentNode) => {
-    const transitions = pattern[currentNode].parents.map(parent => currentNode + ' ' + parent)
+    const transitions = patterns[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
+    console.log(transitions)
     if (!transitions.length) 
       return
     else {
@@ -165,7 +172,11 @@ export const traceBack = (stateId, userId) => {
         return
       } else {
         const [from, to] = targetTransition.split(' ')
-        console.log(from, to);
+        // console.log('------------------------------------');
+        // console.log();
+        // console.log(from, to);
+        // console.log('------------------------------------');
+        
         result.push(from)
         dfs(from)
       }
@@ -173,7 +184,8 @@ export const traceBack = (stateId, userId) => {
 
   }
   dfs(stateId)
-  console.table(result)
+  result = result.reverse()
+  console.log('result', result)
 } 
 
 export const modelReducer = (state, action) => {
