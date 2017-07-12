@@ -64,9 +64,11 @@ class LiveGraph extends Component {
         text: 'pattern ' + k
       }
     })
+    
     console.log('------------------------------------');
     console.log(attackPattern);
     console.log('------------------------------------');
+    // console.clear()
 
     return (
       <div>

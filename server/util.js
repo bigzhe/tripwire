@@ -153,47 +153,27 @@ export const modelReducer = (state, action) => {
       // ]
 
       // filter the expired moves
-      const moves = []
-      action.moves.forEach(move => {
-        const pattern = AttackPattern.states
-      console.log('----MOVE--------------------------------');
-      console.log(move)
-      console.log(new Date() - new Date(move.fromTime), pattern[move.to].timeout);
-      console.log('------------------------------------');
-        if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
-          console.log('expired')
-          // TODO: handle the expired -- dfs to delete expired nodes
-        } else {
-          moves.push(move)
-        }
-      })
+
+      const isExpiredTuple = (stateId) => {
+
+      }
 
       // update Track
-      const now = new Date()
       let Track = {...state.Track}
       Track[action.id] = Track[action.id] || {}
 
-      // dye the parent nodes with the target value to now
-      const dyeNodes = (currentNode, target, now) => {
-        if (Track[action.id][currentNode] !== target)
-          return
-        Track[action.id][currentNode] = now
+      const moves = []
+      action.moves.forEach(move => {
         const pattern = AttackPattern.states
-
-        pattern[currentNode].parents.forEach(parent => {
-          dyeNodes(parent, target, now)
-        })
-      }
-      moves.forEach(move => {
-        //   from: 's1', to: 's3', commitTime
-        Track[action.id][move.to] = now
-        if (move.from)
-          dyeNodes(move.from, Track[action.id][move.from], now)
+        if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
+          console.log('expired')
+          // TODO: handle the expired -- dfs to delete expired nodes
+          
+        } else {
+          moves.push(move)
+          Track[action.id][move.from + ' ' + move.to] = new Date()
+        }
       })
-
-      console.log('------------------------------------');
-      console.log(Track);
-      console.log('------------------------------------');
 
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));

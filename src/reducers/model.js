@@ -86,43 +86,49 @@ const model = (state = 'Loading', action) => {
       // ]
 
       // filter the expired moves
+      const isExpiredTuple = (stateId) => {
+
+      }
+
+      // update Track
+      let Track = {...state.Track}
+      Track[action.id] = Track[action.id] || {}
+
       const moves = []
       action.moves.forEach(move => {
         const pattern = AttackPattern.states
-      console.log('----MOVE--------------------------------');
-      console.log(move)
-      console.log(new Date() - new Date(move.fromTime), pattern[move.to].timeout);
-      console.log('------------------------------------');
         if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes
+          
         } else {
           moves.push(move)
+          Track[action.id][move.from + ' ' + move.to] = new Date()
         }
       })
 
       // update Track
-      const now = new Date()
-      let Track = {...state.Track}
-      Track[action.id] = Track[action.id] || {}
+      // const now = new Date()
+      // let Track = {...state.Track}
+      // Track[action.id] = Track[action.id] || {}
 
       // dye the parent nodes with the target value to now
-      const dyeNodes = (currentNode, target, now) => {
-        if (Track[action.id][currentNode] !== target)
-          return
-        Track[action.id][currentNode] = now
-        const pattern = AttackPattern.states
+      // const dyeNodes = (currentNode, target, now) => {
+      //   if (Track[action.id][currentNode] !== target)
+      //     return
+      //   Track[action.id][currentNode] = now
+      //   const pattern = AttackPattern.states
 
-        pattern[currentNode].parents.forEach(parent => {
-          dyeNodes(parent, target, now)
-        })
-      }
-      moves.forEach(move => {
+      //   pattern[currentNode].parents.forEach(parent => {
+      //     dyeNodes(parent, target, now)
+      //   })
+      // }
+      // moves.forEach(move => {
         //   from: 's1', to: 's3', commitTime
-        Track[action.id][move.to] = now
-        if (move.from)
-          dyeNodes(move.from, Track[action.id][move.from], now)
-      })
+        
+        // if (move.from)
+        //   dyeNodes(move.from, Track[action.id][move.from], now)
+      // })
 
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
