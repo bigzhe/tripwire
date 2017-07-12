@@ -141,14 +141,17 @@ const insertState = (id, arr) => {
  export const traceBack = (stateId, userId) => {
   console.clear()
   let result = [stateId]
-  const initialTransitions = patterns[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
+  const initialTransitions = pattern[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
+  if (!initialTransitions.length) {
+    return []
+  }
   const largest = initialTransitions.reduce((a,b) => {
     return new Date(a) > new Date(b) ? a : b
   })
   // console.log('largest', largest)
 
   const dfs = (currentNode) => {
-    const transitions = patterns[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
+    const transitions = pattern[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
     console.log(transitions)
     if (!transitions.length) 
       return

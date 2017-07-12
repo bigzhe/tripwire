@@ -10,6 +10,9 @@ const StatePresenter = ({id, users, patterns, Track}) => {
     console.clear()
     let result = [stateId]
     const initialTransitions = patterns[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
+    if (!initialTransitions.length) {
+      return []
+    }
     const largest = initialTransitions.reduce((a,b) => {
       return new Date(a) > new Date(b) ? a : b
     })
