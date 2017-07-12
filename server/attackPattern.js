@@ -51,7 +51,7 @@ const AttackPattern = {
       label: 'bcd',
       info: '',
       children: ['s5'],
-      parents: ['s1', 's2'],
+      parents: ['s1', 's2', 's3'],
       timeout: 10000,
       fx: 220,
       fy: 353,

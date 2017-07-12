@@ -107,28 +107,6 @@ const model = (state = 'Loading', action) => {
         }
       })
 
-      // update Track
-      // const now = new Date()
-      // let Track = {...state.Track}
-      // Track[action.id] = Track[action.id] || {}
-
-      // dye the parent nodes with the target value to now
-      // const dyeNodes = (currentNode, target, now) => {
-      //   if (Track[action.id][currentNode] !== target)
-      //     return
-      //   Track[action.id][currentNode] = now
-      //   const pattern = AttackPattern.states
-
-      //   pattern[currentNode].parents.forEach(parent => {
-      //     dyeNodes(parent, target, now)
-      //   })
-      // }
-      // moves.forEach(move => {
-        //   from: 's1', to: 's3', commitTime
-        
-        // if (move.from)
-        //   dyeNodes(move.from, Track[action.id][move.from], now)
-      // })
 
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));

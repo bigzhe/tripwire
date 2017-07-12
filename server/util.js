@@ -88,7 +88,7 @@ export const parseLog = (model, {id, pc, action, date}) => {
           // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
             // console.log('not expired')
             // when two moves to the same node
-            if (!map[c] || map[c].commitTime < s.commitTime) { // use the larger (later) commit time
+            if (!map[c] || new Date(map[c].commitTime) < new Date(s.commitTime)) { // use the larger (later) commit time
               map[c] = {...s}
               // id
               // commitTime
@@ -137,6 +137,44 @@ const insertState = (id, arr) => {
     return [...arr, id]
   }
 }
+
+export const traceBack = (stateId, userId) => {
+  let result = []
+  let largest = Math.max(pattern[currentNode].parents.map(parent => Track[userId][currentNode + ' ' + parent]))
+  const dfs = (currentNode) => {
+    const transitions = pattern[currentNode].parents.map(parent => currentNode + ' ' + parent)
+    if (!transitions.length) 
+      return
+    else {
+      let targetTransition = transitions.reduce((a,b) => {
+        if (!a && Track[userId][b] > largest) {
+          return undefined
+        } else if (!a && Track[userId][b] <= largest) {
+          return b
+        } else {
+          if (Track[userId][a] < Track[userId][b] && Track[userId][b] < largest)  {
+            return b
+          } else {
+            return a
+          }
+        }
+
+      }, undefined)
+
+      if (targetTransition === undefined) { // all states were updated
+        return
+      } else {
+        const [from, to] = targetTransition.split(' ')
+        console.log(from, to);
+        result.push(from)
+        dfs(from)
+      }
+    }
+
+  }
+  dfs(stateId)
+  console.table(result)
+} 
 
 export const modelReducer = (state, action) => {
   switch (action.type) {
