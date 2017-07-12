@@ -142,10 +142,19 @@ const model = (state = 'Loading', action) => {
       let updatedUserView = [...state.UserView[action.id]]
       let updatedStateView = {...state.StateView}
 
-      const updatedStates = []
+      const pattern = AttackPattern.states
+
+
+      const isExpiredMove = (commitTime, moveTo) => {
+        return new Date() - new Date(commitTime) > pattern[moveTo].timeout
+      }
 
       const isExpiredTuple = (stateId) => {
-        return true
+        const commitTime = updatedUserView.find(elem => elem.id === stateId).commitTime
+        return pattern[stateId].children.reduce((a,b) => {
+          if (!a) return false
+          return isExpiredMove(commitTime, b)
+        }, true)
       }
 
       // update Track
@@ -154,8 +163,9 @@ const model = (state = 'Loading', action) => {
 
       const moves = []
       action.moves.forEach(move => {
-        const pattern = AttackPattern.states
-        if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
+        // const pattern = AttackPattern.states
+        if (isExpiredMove(move.fromTime, move.to)) { // expired
+        // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes
           const trace = traceBack(move.from, action.id, Track)
@@ -169,7 +179,6 @@ const model = (state = 'Loading', action) => {
                 1
               )
               updatedStateView[s]= removeState(action.id, updatedStateView[s])
-              updatedStates.push(s)
               // console.log('problem', updatedUserView);
             }
 

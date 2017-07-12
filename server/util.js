@@ -210,9 +210,18 @@ export const modelReducer = (state, action) => {
       state.UserView[action.id] = state.UserView[action.id] || []
       let updatedUserView = [...state.UserView[action.id]]
       let updatedStateView = {...state.StateView}
+      const pattern = AttackPattern.states
+
+      const isExpiredMove = (commitTime, moveTo) => {
+        return new Date() - new Date(commitTime) > pattern[moveTo].timeout
+      }
 
       const isExpiredTuple = (stateId) => {
-        return true
+        const commitTime = updatedUserView.find(elem => elem.id === stateId).commitTime
+        return pattern[stateId].children.reduce((a,b) => {
+          if (!a) return false
+          return isExpiredMove(commitTime, b)
+        }, true)
       }
 
       // update Track
@@ -221,8 +230,9 @@ export const modelReducer = (state, action) => {
 
       const moves = []
       action.moves.forEach(move => {
-        const pattern = AttackPattern.states
-        if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
+        // const pattern = AttackPattern.states
+        if (isExpiredMove(move.fromTime, move.to)) { // expired
+        // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes
           const trace = traceBack(move.from, action.id, Track)
