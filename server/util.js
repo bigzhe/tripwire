@@ -138,12 +138,12 @@ const insertState = (id, arr) => {
   }
 }
 
- export const traceBack = (stateId, userId) => {
-  console.clear()
+ export const traceBack = (stateId, userId, Track) => {
+  const pattern = AttackPattern.states
   let result = [stateId]
   const initialTransitions = pattern[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
   if (!initialTransitions.length) {
-    return []
+    return result
   }
   const largest = initialTransitions.reduce((a,b) => {
     return new Date(a) > new Date(b) ? a : b
@@ -189,6 +189,7 @@ const insertState = (id, arr) => {
   dfs(stateId)
   result = result.reverse()
   console.log('result', result)
+  return result
 } 
 
 export const modelReducer = (state, action) => {
@@ -206,9 +207,12 @@ export const modelReducer = (state, action) => {
       // ]
 
       // filter the expired moves
+      state.UserView[action.id] = state.UserView[action.id] || []
+      let updatedUserView = [...state.UserView[action.id]]
+      let updatedStateView = {...state.StateView}
 
       const isExpiredTuple = (stateId) => {
-
+        return true
       }
 
       // update Track
@@ -221,20 +225,37 @@ export const modelReducer = (state, action) => {
         if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes
+          const trace = traceBack(move.from, action.id, Track)
+          
+          trace.forEach(s => {
+            if (isExpiredTuple(s)) {
+              console.log('delete', s, 'index', updatedUserView.findIndex(elem=>elem.id===s))
+              // remove the elem with an id equals to s
+              updatedUserView.splice(
+                updatedUserView.findIndex(elem=>elem.id===s), 
+                1
+              )
+              updatedStateView[s]= removeState(action.id, updatedStateView[s])
+              // console.log('problem', updatedUserView);
+            }
+
+          })
           
         } else {
           moves.push(move)
           Track[action.id][move.from + ' ' + move.to] = new Date()
         }
       })
+      console.log(updatedUserView);
+
 
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(moves.map((m) => m.to)));
 
       // when the user id is not in the state
-      state.UserView[action.id] = state.UserView[action.id] || []
-      const updatedUserView = [...state.UserView[action.id]]
+      // state.UserView[action.id] = state.UserView[action.id] || []
+      // const updatedUserView = [...state.UserView[action.id]]
 
       const findTupleByState = (stateId) => {
         return updatedUserView.find(elem => elem.id === stateId)
@@ -267,7 +288,7 @@ export const modelReducer = (state, action) => {
 
       // state view
       // TODO: consider the expiration time
-      let updatedStateView = {...state.StateView}
+      // let updatedStateView = {...state.StateView}
       // console.log(state.StateView)
 
       // froms.forEach((f) => {

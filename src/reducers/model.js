@@ -27,6 +27,7 @@ const updatedConfigOfNodes = (sArr, state, updateAttrs) => {
   // sArr: s1, s2, moveFrom
   // updateAttrs: {size, sizeOfANode}
   let updatedConfig = {...state.GraphConfig.updatedConfig}
+  console.log('sArr', sArr)
   sArr.forEach((s) => {
     updatedConfig[s] = updatedConfig[s] || {}
     Object.entries(updateAttrs).forEach(([attr, func]) => {
@@ -65,6 +66,59 @@ const insertState = (id, arr) => {
   }
 }
 
+ export const traceBack = (stateId, userId, Track) => {
+  const pattern = AttackPattern.states
+  let result = [stateId]
+  const initialTransitions = pattern[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
+  if (!initialTransitions.length) {
+    return result
+  }
+  const largest = initialTransitions.reduce((a,b) => {
+    return new Date(a) > new Date(b) ? a : b
+  })
+  // console.log('largest', largest)
+
+  const dfs = (currentNode) => {
+    const transitions = pattern[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
+    console.log(transitions)
+    if (!transitions.length) 
+      return
+    else {
+      let targetTransition = transitions.reduce((a,b) => {
+        if (!a && Track[userId][b] > largest) {
+          return undefined
+        } else if (!a && Track[userId][b] <= largest) {
+          return b
+        } else {
+          if (Track[userId][a] < Track[userId][b] && Track[userId][b] < largest)  {
+            return b
+          } else {
+            return a
+          }
+        }
+
+      }, undefined)
+
+      if (targetTransition === undefined) { // all states were updated
+        return
+      } else {
+        const [from, to] = targetTransition.split(' ')
+        // console.log('------------------------------------');
+        // console.log();
+        // console.log(from, to);
+        // console.log('------------------------------------');
+        
+        result.push(from)
+        dfs(from)
+      }
+    }
+
+  }
+  dfs(stateId)
+  result = result.reverse()
+  console.log('result', result)
+  return result
+} 
 
 const model = (state = 'Loading', action) => {
   switch (action.type) {
@@ -84,10 +138,14 @@ const model = (state = 'Loading', action) => {
       //   from: 's3', to: 's4'
       // }
       // ]
+      state.UserView[action.id] = state.UserView[action.id] || []
+      let updatedUserView = [...state.UserView[action.id]]
+      let updatedStateView = {...state.StateView}
 
-      // filter the expired moves
+      const updatedStates = []
+
       const isExpiredTuple = (stateId) => {
-
+        return true
       }
 
       // update Track
@@ -100,21 +158,35 @@ const model = (state = 'Loading', action) => {
         if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes
+          const trace = traceBack(move.from, action.id, Track)
+          
+          trace.forEach(s => {
+            if (isExpiredTuple(s)) {
+              console.log('delete', s, 'index', updatedUserView.findIndex(elem=>elem.id===s))
+              // remove the elem with an id equals to s
+              updatedUserView.splice(
+                updatedUserView.findIndex(elem=>elem.id===s), 
+                1
+              )
+              updatedStateView[s]= removeState(action.id, updatedStateView[s])
+              updatedStates.push(s)
+              // console.log('problem', updatedUserView);
+            }
+
+          })
           
         } else {
           moves.push(move)
           Track[action.id][move.from + ' ' + move.to] = new Date()
         }
       })
-
+      console.log(updatedUserView);
 
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(moves.map((m) => m.to)));
 
       // when the user id is not in the state
-      state.UserView[action.id] = state.UserView[action.id] || []
-      const updatedUserView = [...state.UserView[action.id]]
 
       const findTupleByState = (stateId) => {
         return updatedUserView.find(elem => elem.id === stateId)
@@ -145,7 +217,7 @@ const model = (state = 'Loading', action) => {
       //     .map((t) => {return {id: t.to, commitTime: t.commitTime}}))
 
       // state view
-      let updatedStateView = {...state.StateView}
+      // let updatedStateView = {...state.StateView}
       // console.log(state.StateView)
 
       // froms.forEach((f) => {
@@ -167,7 +239,9 @@ const model = (state = 'Loading', action) => {
 
       return {
         ...updatedStateWithConfig(
-          Array.from(new Set([...froms, ...tos])),
+          // Array.from(new Set([...froms, ...tos])),
+          // ['s1', 's2', 's3', 's4', 's5'],
+          Object.keys(updatedStateView), 
           updatedModel,
           {
             size: sizeOfANode,

@@ -64,7 +64,7 @@ const AttackPattern = {
       label: 'Final state',
       info: 'The outcome',
       children: [],
-      timeout: 100000,
+      timeout: 100,
       parents: ['s3','s4'],
       canCommit: (user, action) => action.includes('s5'),
       pattern: 'pattern1',
