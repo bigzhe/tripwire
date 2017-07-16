@@ -9,15 +9,15 @@ const AttackPattern = {
       label: 'initial state for pattern 1',
       children: ['s1', 's2'],
       parents: [],
-      canCommit: () => true,
-      // canCommit: {
-      //   s1: (tuple) => {
-      //     return tuple.includes('s1')
-      //   },
-      //   s2: (tuple) => {
-      //     return tuple.includes('s2')
-      //   }
-      // },
+      // canCommit: () => true,
+      canCommit: {
+        s1: (user, tuple) => {
+          return tuple.includes('s1')
+        },
+        s2: (user, tuple) => {
+          return tuple.includes('s2')
+        }
+      },
       pattern: 'pattern1'
     },
     s1: {
@@ -27,7 +27,15 @@ const AttackPattern = {
       children: ['s3', 's4'],
       timeout: 9999999999999,
       fx: 100,
-      canCommit: (user, action) => action.includes('s1'),
+      // canCommit: (user, action) => action.includes('s1'),
+      canCommit: {
+        s3: (user, tuple) => {
+          return tuple.includes('s3')
+        },
+        s4: (user, tuple) => {
+          return tuple.includes('s4')
+        }
+      },
       parents: ['s0'],
       // fy: 700,
       pattern: 'pattern1',
@@ -40,7 +48,12 @@ const AttackPattern = {
       parents: ['s0'],
       timeout: 9999999999999999,
       fx: 350,
-      canCommit: (user, action) => action.includes('s2'),
+      // canCommit: (user, action) => action.includes('s2'),
+      canCommit: {
+        s4: (user, tuple) => {
+          return tuple.includes('s4')
+        },
+      },
       pattern: 'pattern1',
     },
     s3: {
@@ -50,7 +63,15 @@ const AttackPattern = {
       children: ['s4', 's5'],
       parents: ['s1'],
       timeout: 5000,
-      canCommit: (user, action) => action.includes('s3'),
+      // canCommit: (user, action) => action.includes('s3'),
+      canCommit: {
+        s4: (user, tuple) => {
+          return tuple.includes('s4')
+        },
+        s5: (user, tuple) => {
+          return tuple.includes('s5')
+        }
+      },
       pattern: 'pattern1',
     },
     s4: {
@@ -62,7 +83,12 @@ const AttackPattern = {
       timeout: 10000,
       fx: 220,
       fy: 353,
-      canCommit: (user, action) => action.includes('s4'),
+      // canCommit: (user, action) => action.includes('s4'),
+      canCommit: {
+        s5: (user, tuple) => {
+          return tuple.includes('s5')
+        },
+      },
       pattern: 'pattern1',
     },
     s5: {
@@ -73,7 +99,8 @@ const AttackPattern = {
       children: [],
       timeout: 100,
       parents: ['s3','s4'],
-      canCommit: (user, action) => action.includes('s5'),
+      // canCommit: (user, action) => action.includes('s5'),
+      canCommit: {},
       pattern: 'pattern1',
     },
   }

@@ -62,7 +62,7 @@ export const parseLog = (model, {id, pc, action, date}) => {
   // the user should always be at s0, so
   if (!model.UserView[user] || model.UserView[user].findIndex(elem => elem.id === 's0') === -1) {
     pattern['s0'].children.forEach(c => {
-      if (pattern[c].canCommit(user, action)) {
+      if (pattern.s0.canCommit[c](user, action)) {
         moves.push({from: 's0' , to: c, fromTime: 0})
       }
     })
@@ -91,7 +91,7 @@ export const parseLog = (model, {id, pc, action, date}) => {
         pattern[s.id].children.forEach((c) => {
           // can commit
           // TODO: change the canCommit to transition
-          if (pattern[c].canCommit(user, action)  ) {
+          if (pattern[s.id].canCommit[c](user, action)  ) {
             // not expired
             // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
             if (!isExpiredMove(s.commitTime, c)) {
@@ -305,8 +305,6 @@ export const modelReducer = (state, action) => {
         }
       })
 
-// const removeState = (id, arr) => {
-      
       moves.forEach(move => {
         let targetTuple = findTupleByState(move.to)
         console.log(targetTuple)
