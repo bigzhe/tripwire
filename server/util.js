@@ -154,8 +154,8 @@ const insertState = (id, arr) => {
   }
 }
 
-export const traceBack = (stateId, userId, Track) => {
-  const pattern = AttackPattern.states
+export const traceBack = (stateId, userId, Track, pattern) => {
+  // const pattern = AttackPattern.states
   let result = [stateId]
   const initialTransitions = pattern[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
   if (!initialTransitions.length) {
@@ -223,10 +223,6 @@ export const modelReducer = (state, action) => {
       // ]
 
       // filter the expired moves
-      // state.UserView[action.id] = state.UserView[action.id] || []
-      // state.StateView['s0'] = state.StateView['s0'] || []
-      // let updatedUserView = [...state.UserView[action.id]]
-      // updatedUserView = updatedUserView || []
       let updatedStateView = {...state.StateView}
       updatedStateView['s0'] = updatedStateView['s0'] || []
 

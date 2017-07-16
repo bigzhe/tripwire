@@ -1,63 +1,13 @@
 import React from 'react'
 import {Container, Button, Header, List, Divider} from 'semantic-ui-react'
 
+import {traceBack} from '../../server/util'
+
 const StatePresenter = ({id, users, patterns, Track}) => {
   // console.log(pattern)
-  console.table(Track)
+  // console.table(Track)
   console.clear()
-  
-  const traceBack = (stateId, userId) => {
-    console.clear()
-    let result = [stateId]
-    const initialTransitions = patterns[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
-    if (!initialTransitions.length) {
-      return []
-    }
-    const largest = initialTransitions.reduce((a,b) => {
-      return new Date(a) > new Date(b) ? a : b
-    })
-    // console.log('largest', largest)
 
-    const dfs = (currentNode) => {
-      const transitions = patterns[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
-      console.log(transitions)
-      if (!transitions.length) 
-        return
-      else {
-        let targetTransition = transitions.reduce((a,b) => {
-          if (!a && Track[userId][b] > largest) {
-            return undefined
-          } else if (!a && Track[userId][b] <= largest) {
-            return b
-          } else {
-            if (Track[userId][a] < Track[userId][b] && Track[userId][b] < largest)  {
-              return b
-            } else {
-              return a
-            }
-          }
-
-        }, undefined)
-
-        if (targetTransition === undefined) { // all states were updated
-          return
-        } else {
-          const [from, to] = targetTransition.split(' ')
-          // console.log('------------------------------------');
-          // console.log();
-          // console.log(from, to);
-          // console.log('------------------------------------');
-          
-          result.push(from)
-          dfs(from)
-        }
-      }
-
-    }
-    dfs(stateId)
-    result = result.reverse()
-    console.log('result', result)
-  } 
   let pattern = patterns[id]
 
   users = users || []
@@ -73,7 +23,7 @@ const StatePresenter = ({id, users, patterns, Track}) => {
           users.map((user) => 
             <List.Item 
               key={user}>
-              <a href="#" onClick={() => traceBack(id, user)}>{user}</a>
+              <a href="#" onClick={() => traceBack(id, user, Track, patterns)}>{user}</a>
             </List.Item>
           )
         }
