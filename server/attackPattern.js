@@ -7,9 +7,32 @@ const AttackPattern = {
       id: 's0',
       isInitial: true,
       label: 'initial state for pattern 1',
-      children: ['s5'],
+      children: ['s1'],
       parents: [],
       // canCommit: () => true,
+      canCommit: {
+        s1: (tuple) => {
+          const {user, device, activity, key_data} = tuple
+          switch (activity) {
+            case 'login':
+              return true
+              break;          
+            default:
+              return false
+          }
+        },
+      },
+      pattern: 'pattern1'
+    },
+    s1: {
+      id: 's1',
+      label: 'Login',
+      info: '',
+      children: ['s5'],
+      parents: ['s0'],
+      timeout: 9999999999999,
+      fx: 100,
+      // canCommit: (user, action) => action.includes('s1'),
       canCommit: {
         s5: (tuple) => {
           const {user, device, activity, key_data} = tuple
@@ -24,28 +47,9 @@ const AttackPattern = {
           }
         },
       },
-      pattern: 'pattern1'
+      // fy: 700,
+      pattern: 'pattern1',
     },
-    // s1: {
-    //   id: 's1',
-    //   label: 'The initial state',
-    //   info: '',
-    //   children: ['s3', 's4'],
-    //   timeout: 9999999999999,
-    //   fx: 100,
-    //   // canCommit: (user, action) => action.includes('s1'),
-    //   canCommit: {
-    //     s3: (user, tuple) => {
-    //       return tuple.includes('s3')
-    //     },
-    //     s4: (user, tuple) => {
-    //       return tuple.includes('s4')
-    //     }
-    //   },
-    //   parents: ['s0'],
-    //   // fy: 700,
-    //   pattern: 'pattern1',
-    // },
     // s2: {
     //   id: 's2',
     //   label: 'Another initial state',
@@ -82,6 +86,7 @@ const AttackPattern = {
     // },
     // s4: {
     //   id: 's4',
+    //   isOutcome: true,      
     //   label: 'bcd',
     //   info: '',
     //   children: ['s5'],
@@ -103,8 +108,8 @@ const AttackPattern = {
       label: 'Final state',
       info: 'The outcome',
       children: [],
-      timeout: 100,
-      parents: ['s0'],
+      timeout: 10 * 60000,
+      parents: ['s1'],
       // canCommit: (user, action) => action.includes('s5'),
       canCommit: {},
       pattern: 'pattern1',

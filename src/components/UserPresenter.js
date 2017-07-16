@@ -13,7 +13,7 @@ const UserPresenter = ({user, positions}) => {
               key={id} 
               style={{
                 color: id === 's5' && 'red'
-              }}>Located in {id}, expired at {'' + commitTime}</List.Item>
+              }}>Located in {id}, commited at {'' + commitTime}</List.Item>
           )
         }
       </List>

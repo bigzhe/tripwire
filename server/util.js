@@ -119,14 +119,6 @@ export const parseLog = (model, tuple) => {
   Object.entries(map).forEach(([k, v]) => {
     moves.push({from: v.id, to: k})
   })
-  // initialStates.forEach((c) => {
-  //     if (pattern[c].canCommit(user, action)) {
-  //       moves.push({from: undefined , to: c, fromTime: 0})
-  //     }
-  // })
-  // add moves to the initial states
-  // moves = [{to: 's1'}]
-  // dispatchUserMoveToMultiple(user, moves)
 
   return moves
 
