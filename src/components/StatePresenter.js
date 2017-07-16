@@ -23,7 +23,7 @@ const StatePresenter = ({id, users, patterns, Track}) => {
           users.map((user) => 
             <List.Item 
               key={user}>
-              <a href="#" onClick={() => traceBack(id, user, Track, patterns)}>{user}</a>
+              {user}'s trace: {traceBack(id, user, Track, patterns).join('->')}
             </List.Item>
           )
         }
@@ -33,7 +33,7 @@ const StatePresenter = ({id, users, patterns, Track}) => {
       <List bulleted>
         {Object.entries(pattern).map(([k,v])=> 
           <List.Item key={k}>
-            {k}: {k === 'timeout' ? 
+            {k}: {k === 'canCommit' ? 
               Object.entries(v).map(([k2, v2]) => 
                 <List.Item key={k2}>{k2}: {v2}</List.Item>
               )

@@ -71,20 +71,25 @@ var router = express.Router();
 
 router.route('/logs')
     .post((req, res) => {
-        let log = {}
+        // let log = {}
         
-        log.id = req.body.id
-        log.pc = req.body.pc
-        log.action = req.body.action
-        log.date = new Date(req.body.date) // parse the date string to Date object
+        // log.id = req.body.id
+        // log.pc = req.body.pc
+        // log.action = req.body.action
+        // log.date = new Date(req.body.date) // parse the date string to Date object
     
 
         // TODO: parse the log and maybe store the tripwire rather than store the log
         // this is the place for the real world cases
-        log.action = log.action.split(' ')
+        const tuple = req.body
+        console.log(tuple)
+        // tuple.user = req.body.user
+        // tuple.device = req.body.pc
+
+        // log.action = log.action.split(' ')
 
         // update the model using the log
-        let moves = parseLog(MODEL, log)
+        let moves = parseLog(MODEL, tuple)
 
         console.log('------MOVES-------------------------');
         console.log(moves);
@@ -92,7 +97,7 @@ router.route('/logs')
        
         MODEL = modelReducer(MODEL, {
             type: 'USER_MOVE_TO_MULTIPLE',
-            id: log.id,
+            tuple,
             moves
         })
 
@@ -102,12 +107,11 @@ router.route('/logs')
         // TODO: notify clients
         io.emit('action', {
             type: 'USER_MOVE_TO_MULTIPLE',
-            id: log.id,
+            tuple,
             moves
         })
 
         res.json(MODEL)
-        // res.json({ log: 'Log processed'})
     })
 
 router.route('/model')
@@ -120,6 +124,7 @@ router.route('/model')
     .delete((req, res) => {
         storage.removeItemSync('MODEL')
         MODEL = unzipMODEL(undefined)
+        io.emit('action', {type: 'RESET_MODEL'})
         res.send('Done')
     })
 

@@ -59,7 +59,7 @@ export const userMoveTo = (id, moveFrom, moveTo, expirationTime) => ({
 
 export const userMoveToMultiple = (id, moves) => ({
   type: 'USER_MOVE_TO_MULTIPLE',
-  id, moves,
+  user, moves,
 })
 
 // log

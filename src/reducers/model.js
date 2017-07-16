@@ -59,10 +59,16 @@ const model = (state = 'Loading', action) => {
         ...action.data,
         GraphConfig,
       }
+    case 'RESET_MODEL':
+      return {
+        UserView: {},
+        StateView: {},
+        GraphConfig,
+      }
     case 'USER_MOVE_TO_MULTIPLE':
       const updatedModel = modelReducer(state, {
         type: 'USER_MOVE_TO_MULTIPLE',
-        id: action.id,
+        tuple: action.tuple,
         moves: action.moves
       })
 
