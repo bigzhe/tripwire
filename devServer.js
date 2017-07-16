@@ -69,24 +69,89 @@ console.log('------------------------------------');
 // router
 var router = express.Router();
 
+const tripwireParse = (log) => {
+    switch (log.activity) {
+        case 'file':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                    Path: log.content,
+                }
+            }
+        case 'login':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                }
+            }
+        case 'logoff':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                }
+            }
+        case 'email':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                    Email: log.content
+                }
+            }
+        case 'http':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                    Address: log.content
+                }
+            }
+        case 'insert':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                }
+            }
+        case 'remove':
+            return {
+                user: log.user,
+                device: log.device,
+                activity: log.activity,
+                key_data: {
+                    Date: log.date,
+                }
+            }
+    
+        default:
+            break;
+    }
+}
+
 router.route('/logs')
     .post((req, res) => {
-        // let log = {}
-        
-        // log.id = req.body.id
-        // log.pc = req.body.pc
-        // log.action = req.body.action
-        // log.date = new Date(req.body.date) // parse the date string to Date object
-    
 
         // TODO: parse the log and maybe store the tripwire rather than store the log
         // this is the place for the real world cases
-        const tuple = req.body
-        console.log(tuple)
-        // tuple.user = req.body.user
-        // tuple.device = req.body.pc
 
-        // log.action = log.action.split(' ')
+
+        const tuple = tripwireParse(req.body)
+        console.log(tuple)
 
         // update the model using the log
         let moves = parseLog(MODEL, tuple)

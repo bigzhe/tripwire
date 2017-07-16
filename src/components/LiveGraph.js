@@ -25,35 +25,8 @@ class LiveGraph extends Component {
       dispatchSetVisibilityFilter,
     } = this.props
 
-    // Parse Log !!!
-    const generateMoveAction = (log) => {
-          let moves = [{
-          from: 's1', to: 's3', expirationTime: severalHoursLater(1)
-        }, {
-          from: 's1', to: 's4', expirationTime: severalHoursLater(1)
-        }, {
-          from: 's3', to: 's4', expirationTime: severalHoursLater(1)
-        }
-        ]
-      let id = 'Someone'
-      // let moveFrom = 's3'
-      // let moveFrom = undefined
-      // let moveTo = 's1'
-      
-      // console.log(model)
-      // dispatchRefreshGraphConfig()
-      dispatchUserMoveToMultiple(id, moves)
-    }
-    // 
-
-
     // Graph event callbacks
     const onClickNode = function (nodeId) {
-      // console.log('Clicked node', nodeId);
-      // dispatchChangeColor(nodeId, 'black');
-      // console.log('------------------------------------');
-      // console.log(nodeId);
-      // console.log('------------------------------------');
       dispatchSetPresentFilter('StateView', nodeId)
     };
 
@@ -65,11 +38,6 @@ class LiveGraph extends Component {
       }
     })
     
-    console.log('------------------------------------');
-    console.log(attackPattern);
-    console.log('------------------------------------');
-    // console.clear()
-
     return (
       <div>
        
