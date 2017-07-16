@@ -10,6 +10,14 @@ const AttackPattern = {
       children: ['s1', 's2'],
       parents: [],
       canCommit: () => true,
+      // canCommit: {
+      //   s1: (tuple) => {
+      //     return tuple.includes('s1')
+      //   },
+      //   s2: (tuple) => {
+      //     return tuple.includes('s2')
+      //   }
+      // },
       pattern: 'pattern1'
     },
     s1: {
