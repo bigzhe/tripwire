@@ -3,34 +3,33 @@ const AttackPattern = {
 
   },
   states: {
-    // s0: {
-    //   id: 's0',
-    //   isInitial: true,
-    //   label: 'initial state for pattern 1',
-    //   // children: ['s1', 's2'],
-    //   canCommit: () => true,
-    //   pattern: 'pattern1'
-    // },
+    s0: {
+      id: 's0',
+      isInitial: true,
+      label: 'initial state for pattern 1',
+      children: ['s1', 's2'],
+      parents: [],
+      canCommit: () => true,
+      pattern: 'pattern1'
+    },
     s1: {
       id: 's1',
-      isInitial: true,
       label: 'The initial state',
       info: '',
       children: ['s3', 's4'],
       timeout: 9999999999999,
       fx: 100,
       canCommit: (user, action) => action.includes('s1'),
-      parents: [],
+      parents: ['s0'],
       // fy: 700,
       pattern: 'pattern1',
     },
     s2: {
       id: 's2',
-      isInitial: true,
       label: 'Another initial state',
       info: '',
       children: ['s4'],
-      parents: [],
+      parents: ['s0'],
       timeout: 9999999999999999,
       fx: 350,
       canCommit: (user, action) => action.includes('s2'),

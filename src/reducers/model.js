@@ -1,4 +1,5 @@
 import AttackPattern from '../../server/attackPattern'
+import until from '../../server/util'
 
 const GraphConfig = {
     width: 500,
@@ -138,11 +139,29 @@ const model = (state = 'Loading', action) => {
       //   from: 's3', to: 's4'
       // }
       // ]
-      state.UserView[action.id] = state.UserView[action.id] || []
-      let updatedUserView = [...state.UserView[action.id]]
+
+      // filter the expired moves
       let updatedStateView = {...state.StateView}
+      updatedStateView['s0'] = updatedStateView['s0'] || []
+
+      let updatedUserView = []
+      if (state.UserView[action.id]) {
+        updatedUserView = [...state.UserView[action.id]]
+      }
+
+
 
       const pattern = AttackPattern.states
+
+      // add/update s0
+      const initialIndex = updatedUserView.findIndex(elem => elem.id === 's0')
+      if (initialIndex === -1) { // no s0 in the model
+        updatedUserView.push({id: 's0', commitTime: new Date()})
+        updatedStateView['s0'].push(action.id)
+      } else {
+        updatedUserView[initialIndex] = {id: 's0', commitTime: new Date()}
+      }
+
 
 
       const isExpiredMove = (commitTime, moveTo) => {
@@ -164,7 +183,8 @@ const model = (state = 'Loading', action) => {
       const moves = []
       action.moves.forEach(move => {
         // const pattern = AttackPattern.states
-        if (isExpiredMove(move.fromTime, move.to)) { // expired
+        // if (isExpiredMove(move.fromTime, move.to)) { // expired
+        if (false) {
         // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes

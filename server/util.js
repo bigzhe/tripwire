@@ -69,22 +69,38 @@ const filterPattern = (pattern, target) => {
   return result
 }
 
+// get moves
 export const parseLog = (model, {id, pc, action, date}) => {
   const pattern = AttackPattern.states
-  const initialStates = getIntialStates(pattern)
+  // const initialStates = getIntialStates(pattern)
   // dispatchUserMoveTo(id, moveFrom, moveTo, severalHoursLater(2))
   let user = id
   let moves = []
 
+  // the user should always be at s0, so
+  if (!model.UserView[user] || model.UserView[user].findIndex(elem => elem.id === 's0') === -1) {
+    pattern['s0'].children.forEach(c => {
+      if (pattern[c].canCommit(user, action)) {
+        moves.push({from: 's0' , to: c, fromTime: 0})
+      }
+    })
+  }
+  // if (initialIndex === -1) { // no s0 in the model
+    // model.UserView[user].push({id: 's0', commitTime: new Date()})
+  // } else {
+    // model.UserView[user][initialIndex] = {id: 's0', commitTime: new Date()}
+  // }
+
+
   let map = {}
-  // TODO: consider the expiration time here
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
       pattern[s.id].children.forEach((c) => {
         // can commit
+        // TODO: change the canCommit to transition
         if (pattern[c].canCommit(user, action)  ) {
-          // not expired
+          // TODO: not expired
           // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
             // console.log('not expired')
             // when two moves to the same node
@@ -102,11 +118,11 @@ export const parseLog = (model, {id, pc, action, date}) => {
   Object.entries(map).forEach(([k, v]) => {
     moves.push({from: v.id, to: k, fromTime: v.commitTime})
   })
-  initialStates.forEach((c) => {
-      if (pattern[c].canCommit(user, action)) {
-        moves.push({from: undefined , to: c, fromTime: 0})
-      }
-  })
+  // initialStates.forEach((c) => {
+  //     if (pattern[c].canCommit(user, action)) {
+  //       moves.push({from: undefined , to: c, fromTime: 0})
+  //     }
+  // })
   // add moves to the initial states
   // moves = [{to: 's1'}]
   // dispatchUserMoveToMultiple(user, moves)
@@ -138,7 +154,7 @@ const insertState = (id, arr) => {
   }
 }
 
- export const traceBack = (stateId, userId, Track) => {
+export const traceBack = (stateId, userId, Track) => {
   const pattern = AttackPattern.states
   let result = [stateId]
   const initialTransitions = pattern[stateId].parents.map(parent => Track[userId][parent + ' ' + stateId]).filter(n => n!=undefined)
@@ -207,10 +223,30 @@ export const modelReducer = (state, action) => {
       // ]
 
       // filter the expired moves
-      state.UserView[action.id] = state.UserView[action.id] || []
-      let updatedUserView = [...state.UserView[action.id]]
+      // state.UserView[action.id] = state.UserView[action.id] || []
+      // state.StateView['s0'] = state.StateView['s0'] || []
+      // let updatedUserView = [...state.UserView[action.id]]
+      // updatedUserView = updatedUserView || []
       let updatedStateView = {...state.StateView}
+      updatedStateView['s0'] = updatedStateView['s0'] || []
+
+      let updatedUserView = []
+      if (state.UserView[action.id]) {
+        updatedUserView = [...state.UserView[action.id]]
+      }
+
+
+
       const pattern = AttackPattern.states
+
+      // add/update s0
+      const initialIndex = updatedUserView.findIndex(elem => elem.id === 's0')
+      if (initialIndex === -1) { // no s0 in the model
+        updatedUserView.push({id: 's0', commitTime: new Date()})
+        updatedStateView['s0'].push(action.id)
+      } else {
+        updatedUserView[initialIndex] = {id: 's0', commitTime: new Date()}
+      }
 
       const isExpiredMove = (commitTime, moveTo) => {
         return new Date() - new Date(commitTime) > pattern[moveTo].timeout
@@ -231,7 +267,8 @@ export const modelReducer = (state, action) => {
       const moves = []
       action.moves.forEach(move => {
         // const pattern = AttackPattern.states
-        if (isExpiredMove(move.fromTime, move.to)) { // expired
+        // if (isExpiredMove(move.fromTime, move.to)) { // expired
+        if (false) {
         // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
           console.log('expired')
           // TODO: handle the expired -- dfs to delete expired nodes
