@@ -94,7 +94,12 @@ router.route('/logs')
         console.log('------MOVES-------------------------');
         console.log(moves);
         console.log('------------------------------------');
-       
+        
+        io.emit('action', {
+            type: 'ADD_LOG',
+            id: tuple.user,
+            text: 'Moves: ' + moves.map(move => move.from + ' -> ' + move.to).join(', ')
+        })
         MODEL = modelReducer(MODEL, {
             type: 'USER_MOVE_TO_MULTIPLE',
             tuple,
@@ -111,6 +116,7 @@ router.route('/logs')
             moves
         })
 
+
         res.json(MODEL)
     })
 
@@ -125,6 +131,10 @@ router.route('/model')
         storage.removeItemSync('MODEL')
         MODEL = unzipMODEL(undefined)
         io.emit('action', {type: 'RESET_MODEL'})
+        io.emit('action', {
+            type: 'SET_SNACKBAR_MESSAGE',
+            message: 'Model has been reset'
+        })
         res.send('Done')
     })
 

@@ -29,105 +29,14 @@ let LogGenerator = ({
   dispatchSetSnackbarMessage,
   dispatchCloseSnackBar,
 }) => {
-  // console.log(logHistory) Parse Log !!!
-  const parseLog = (user, action) => {
-    // dispatchUserMoveTo(id, moveFrom, moveTo, severalHoursLater(2))
 
-    if (!user || !action) {
-      dispatchSetSnackbarMessage('User or actions cannot be empty')
-      return
-    }
-
-    let moves = []
-    const initialStates = ['s1', 's2']
-    let pattern = attackPattern.pattern1;
-    model.UserView[user].forEach((s) => {
-      pattern[s.id].children.forEach((c) => {
-        if (action.includes(c) && pattern[c].canCommit(user, action)) {          
-          moves.push({from: s.id, to: c, expirationTime: severalHoursLater(2)})
-        }
-      })
-    })
-    initialStates.forEach((c) => {
-        if (action.includes(c) && pattern[c].canCommit(user, action)) {
-          moves.push({from: undefined , to: c, expirationTime: severalHoursLater(2)})
-        }
-    })
-    // add moves to the initial states
-    // moves = [{to: 's1'}]
-    dispatchUserMoveToMultiple(user, moves)
-    let output = 'User: ' + logHistory.currentLog.user + '\t Actions: ' + logHistory.currentLog.action + '\n';
-    moves.forEach((e) => {
-      output += (e.from || 's0') + ' => ' + e.to + '\n'
-    })
-    dispatchAddLog(output);
-  }
-
-  let userData = Object
-    .keys(model.UserView)
-    .map((k) => {
-      return {key: k, value: k, text: k}
-    })
-  let actionData = Object
-    .keys(attackPattern.pattern1)
-    .map((k) => {
-      return {
-        key: k,
-        value: k,
-        text: 'Commit ' + k
-      }
-    })
 
   return (
     <Container>
       <Header >
-        Log Generator
-        <Header.Subheader>
-          Generate log and dispatch to the model
-        </Header.Subheader>
+        Processing Log
       </Header>
-      <Form>
-        <Form.Field>
-          <Dropdown
-            placeholder='Select an user'
-            search
-            selection
-            options={userData}
-            value={logHistory.currentLog.user}
-            onChange={(e, p) => {
-            dispatchAddCurrentLogUser(p.value)
-          }}/>
-        </Form.Field>
-        <Form.Field>
-          <Dropdown
-            placeholder='Select actions'
-            search
-            selection
-            multiple
-            options={actionData}
-            value={logHistory.currentLog.action}
-            onChange={(e, p) => {
-            dispatchUpdateCurrentLogAction(p.value)
-          }}/>
-        </Form.Field>
 
-        <Button
-          onClick={(e) => {
-          e.preventDefault();
-          parseLog(logHistory.currentLog.user, logHistory.currentLog.action)
-          
-        }}>Submit</Button>
-        {
-        // <Button onClick={(e) => {
-        //   e.preventDefault()
-        //   dispatchRefreshGraphConfig()
-        // }}>
-        //   Load
-        // </Button>
-        }
-      </Form>
-
-      <Header as='h5'>Log History</Header>
       <Form>
         <TextArea
           placeholder='Log history showing here...'

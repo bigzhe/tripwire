@@ -15,7 +15,7 @@ const log = (state = initialState, action) => {
           ...state.logHistory,
           {
             id: action.id,
-            text: new Date() + '\n' + action.text,
+            text: '--' + new Date().toLocaleTimeString() + '--' + '\n' + 'User: ' + action.id + '\n' + action.text + '\n',
           }
       ]}
     case 'ADD_CURRENT_LOG_USER':
