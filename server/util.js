@@ -1,11 +1,4 @@
 import AttackPattern from './attackPattern'
-// export const stringToDate = (str) => {
-//   DateFormat df = new SimpleDateFormat("mm/dd/yyyy");
-// }
-const insertWithDefault = (array, elem) => {
-  array = array || []
-  array.push(elem)
-}
 
 export const unzipMODEL = (MODEL) => {
   MODEL = MODEL || {}
@@ -46,20 +39,9 @@ export const zipMODEL = (MODEL) => {
   return {Model: result, Track: MODEL.Track}
 }
 
-
 //
-// ─── PASER ──────────────────────────────────────────────────────────────────────
+// ─── PARSER ──────────────────────────────────────────────────────────────────────
 //
-// get all initial states
-const getIntialStates = (pattern) => {
-  let result = []
-  Object.entries(pattern).forEach(([key, value]) => {
-    if (value.isInitial)
-      result.push(key)
-  })
-  return result
-}
-
 const filterPattern = (pattern, target) => {
   let result = {}
   Object.entries(pattern).forEach(([key, value]) => {
@@ -85,33 +67,48 @@ export const parseLog = (model, {id, pc, action, date}) => {
       }
     })
   }
-  // if (initialIndex === -1) { // no s0 in the model
-    // model.UserView[user].push({id: 's0', commitTime: new Date()})
-  // } else {
-    // model.UserView[user][initialIndex] = {id: 's0', commitTime: new Date()}
-  // }
 
+  const isExpiredMove = (commitTime, moveTo) => {
+    return new Date() - new Date(commitTime) > pattern[moveTo].timeout
+  }
+  const isExpiredState = (state) => {
+    // const commitTime = model.UserView[user].find(elem => elem.id === stateId).commitTime
+    return pattern[state.id].children.reduce((a,b) => {
+      if (!a) return false
+      return isExpiredMove(state.commitTime, b)
+    }, true)
+  }
 
   let map = {}
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
-      pattern[s.id].children.forEach((c) => {
-        // can commit
-        // TODO: change the canCommit to transition
-        if (pattern[c].canCommit(user, action)  ) {
-          // TODO: not expired
-          // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
-            // console.log('not expired')
-            // when two moves to the same node
-            if (!map[c] || new Date(map[c].commitTime) < new Date(s.commitTime)) { // use the larger (later) commit time
-              map[c] = {...s}
-              // id
-              // commitTime
+      // check whether this is a expired state
+      if (isExpiredState(s)) {
+        console.log('Expired state:', s.id)
+        moves.push({from: s.id, to: 's0', fromTime: new Date()})
+      } else {
+        pattern[s.id].children.forEach((c) => {
+          // can commit
+          // TODO: change the canCommit to transition
+          if (pattern[c].canCommit(user, action)  ) {
+            // not expired
+            // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
+            if (!isExpiredMove(s.commitTime, c)) {
+              // console.log('not expired')
+              // when two moves to the same node
+              if (!map[c] || new Date(map[c].commitTime) < new Date(s.commitTime)) { // use the larger (later) commit time
+                map[c] = {...s}
+                // id
+                // commitTime
+              }
+            } else {
+              console.log('Expired!!!!!!!!!!!!!!!');
             }
-          // }
-        }
-      })
+          }
+        })
+      }
+
     })
   }
   // moves.push({from: s.id, to: c, commitTime: Date.now()})
@@ -191,11 +188,7 @@ export const traceBack = (stateId, userId, Track, pattern) => {
         return
       } else {
         const [from, to] = targetTransition.split(' ')
-        // console.log('------------------------------------');
-        // console.log();
-        // console.log(from, to);
-        // console.log('------------------------------------');
-        
+       
         result.push(from)
         dfs(from)
       }
@@ -260,49 +253,59 @@ export const modelReducer = (state, action) => {
       let Track = {...state.Track}
       Track[action.id] = Track[action.id] || {}
 
-      const moves = []
-      action.moves.forEach(move => {
-        // const pattern = AttackPattern.states
-        // if (isExpiredMove(move.fromTime, move.to)) { // expired
-        if (false) {
-        // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
-          console.log('expired')
-          // TODO: handle the expired -- dfs to delete expired nodes
-          const trace = traceBack(move.from, action.id, Track)
+      const moves = action.moves
+      // const moves = []
+      // action.moves.forEach(move => {
+      //   // const pattern = AttackPattern.states
+      //   // if (isExpiredMove(move.fromTime, move.to)) { // expired
+      //   if (false) {
+      //   // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
+      //     console.log('expired')
+      //     // TODO: handle the expired -- dfs to delete expired nodes
+      //     const trace = traceBack(move.from, action.id, Track)
           
-          trace.forEach(s => {
-            if (isExpiredTuple(s)) {
-              console.log('delete', s, 'index', updatedUserView.findIndex(elem=>elem.id===s))
-              // remove the elem with an id equals to s
-              updatedUserView.splice(
-                updatedUserView.findIndex(elem=>elem.id===s), 
-                1
-              )
-              updatedStateView[s]= removeState(action.id, updatedStateView[s])
-              // console.log('problem', updatedUserView);
-            }
+      //     trace.forEach(s => {
+      //       if (isExpiredTuple(s)) {
+      //         console.log('delete', s, 'index', updatedUserView.findIndex(elem=>elem.id===s))
+      //         // remove the elem with an id equals to s
+      //         updatedUserView.splice(
+      //           updatedUserView.findIndex(elem=>elem.id===s), 
+      //           1
+      //         )
+      //         updatedStateView[s]= removeState(action.id, updatedStateView[s])
+      //         // console.log('problem', updatedUserView);
+      //       }
 
-          })
+      //     })
           
-        } else {
-          moves.push(move)
-          Track[action.id][move.from + ' ' + move.to] = new Date()
-        }
-      })
-      console.log(updatedUserView);
-
+      //   } else {
+      //     moves.push(move)
+      //     Track[action.id][move.from + ' ' + move.to] = new Date()
+      //   }
+      // })
+      // console.log(updatedUserView);
+      
+      console.log(moves)
 
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(moves.map((m) => m.to)));
 
       // when the user id is not in the state
-      // state.UserView[action.id] = state.UserView[action.id] || []
-      // const updatedUserView = [...state.UserView[action.id]]
-
       const findTupleByState = (stateId) => {
         return updatedUserView.find(elem => elem.id === stateId)
       }
+
+      // processing the move to s0 moves
+      moves.forEach(move => {
+        if (move.to === 's0') {
+          // deleteSet.push(move.from)
+          updatedUserView.splice(updatedUserView.findIndex(tuple => tuple.id === move.from), 1)
+          updatedStateView[move.from] = removeState(action.id, updatedStateView[move.from])
+        }
+      })
+
+// const removeState = (id, arr) => {
       
       moves.forEach(move => {
         let targetTuple = findTupleByState(move.to)
@@ -315,36 +318,10 @@ export const modelReducer = (state, action) => {
       })
       // update user ivew
 
-      // const updatedUserView = state.UserView[action.id].reduce((total, current) => {
-      //   if (!tos.includes(current.id) && 
-      //       !froms.includes(current.id) ){ // &&
-      //     // new Date() < current.expirationTime ) {
-          
-      //     // not expired
-      //     // id is not duplicated
-      //     // moveFrom
-      //     total.push(current)
-      //   }
-      //   return total
-      // }, moves.filter((elem, pos, arr) => pos === arr.findIndex((e) => e.to === elem.to))
-      //     .map((t) => {return {id: t.to, commitTime: t.commitTime}}))
-
-      // state view
-      // TODO: consider the expiration time
-      // let updatedStateView = {...state.StateView}
-      // console.log(state.StateView)
-
-      // froms.forEach((f) => {
-      //   updatedStateView[f]= removeState(action.id, updatedStateView[f])
-      // })
-
       tos.forEach((t) => {
         updatedStateView[t] = insertState(action.id, updatedStateView[t])
       })
 
-
-
-      
       return {
         ...state,
         UserView: {
