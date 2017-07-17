@@ -81,7 +81,7 @@ const AttackPattern = {
       info: '',
       children: ['s3', 's4'],
       parents: ['s1'],
-      timeout: 2 * 60 * 60000,
+      timeout: 24 * 60 * 60000,
       // fx: 350,
       fy: 400,
       // canCommit: (user, action) => action.includes('s2'),
@@ -115,7 +115,7 @@ const AttackPattern = {
       info: '',
       children: ['s4'],
       parents: ['s2'],
-      timeout: 60 * 60000,
+      timeout: 24 * 60 * 60000,
       fy: 300,
       canCommit: {
         s4: (tuple) => {
@@ -138,7 +138,7 @@ const AttackPattern = {
       info: '',
       children: [],
       parents: ['s2', 's3'],
-      timeout: 60 * 60000,
+      timeout: 24 * 60 * 60000,
       fx: 100,
       fy: 200,
       canCommit: {},

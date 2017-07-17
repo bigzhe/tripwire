@@ -13,6 +13,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import reducers from './reducers';
 import App from './components/App';
+import PostTool from './components/PostTool'
 
 import { TARGET_URL } from './config'
 
@@ -36,6 +37,7 @@ render (
       <MuiThemeProvider >
       <div>
         <Route exact path="/" component={App} />
+        <Route exact path="/post" component={PostTool} />
         {/*<Route path="/liveboard" component={LiveboardContainer} />*/}
       </div>
       </MuiThemeProvider>

@@ -70,6 +70,20 @@ console.log('------------------------------------');
 var router = express.Router();
 
 const tripwireParse = (log) => {
+    if (log.content.startsWith('/')) {
+        log.activity = 'file'
+    } else if (log.content.includes('@')) {
+        log.activity = 'email'
+    } else if (log.content.startsWith('http')) {
+        log.activity = 'http'
+    } else if (log.content === 'login' || log.content === 'logoff') {
+        log.activity = log.content
+    } else if (log.content === 'usb removed') {
+        log.activity = 'remove'
+    } else if (log.content === 'usb inserted') {
+        log.activity = 'insert'
+    }
+
     switch (log.activity) {
         case 'file':
             return {
@@ -182,7 +196,8 @@ router.route('/logs')
         })
 
 
-        res.json(MODEL)
+        // res.json(MODEL)
+        res.send('Parsed')
     })
 
 router.route('/model')

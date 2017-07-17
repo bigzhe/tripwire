@@ -163,7 +163,7 @@ export const traceBack = (stateId, userId, Track, pattern) => {
 
   const dfs = (currentNode) => {
     const transitions = pattern[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
-    console.log(transitions)
+    // console.log(transitions)
     if (!transitions.length) 
       return
     else {
@@ -213,7 +213,7 @@ export const modelReducer = (state, action) => {
       //   from: 's3', to: 's4', fromTime
       // }
       // ]
-      console.log(action)
+      // console.log(action)
 
       const {user, device, activity, key_data} = action.tuple
       const now = key_data.Date
@@ -296,7 +296,7 @@ export const modelReducer = (state, action) => {
 
       moves.forEach(move => {
         let targetTuple = findTupleByState(move.to)
-        console.log(targetTuple)
+        // console.log(targetTuple)
         if (targetTuple) {
           targetTuple.commitTime = now
         } else {
