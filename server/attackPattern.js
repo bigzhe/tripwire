@@ -55,7 +55,7 @@ const AttackPattern = {
       info: '',
       children: ['s2'],
       parents: ['s0'],
-      timeout: 9999999999999,
+      timeout: 99999999999999999999,
       fy: 600,
       // canCommit: (user, action) => action.includes('s1'),
       canCommit: {
@@ -63,7 +63,6 @@ const AttackPattern = {
           const {user, device, activity, key_data} = tuple
           switch (activity) {
             case 'file':
-              console.log(key_data)
               if (key_data.Path.startsWith("/admin"))
                 return true
               break;          
@@ -81,7 +80,8 @@ const AttackPattern = {
       info: '',
       children: ['s3', 's4'],
       parents: ['s1'],
-      timeout: 24 * 60 * 60000,
+      // timeout: 1 * 60 * 60000,
+      timeout: 60,
       // fx: 350,
       fy: 400,
       // canCommit: (user, action) => action.includes('s2'),
@@ -115,7 +115,7 @@ const AttackPattern = {
       info: '',
       children: ['s4'],
       parents: ['s2'],
-      timeout: 24 * 60 * 60000,
+      timeout: 30,
       fy: 300,
       canCommit: {
         s4: (tuple) => {
@@ -138,7 +138,7 @@ const AttackPattern = {
       info: '',
       children: [],
       parents: ['s2', 's3'],
-      timeout: 24 * 60 * 60000,
+      timeout: 30,
       fx: 100,
       fy: 200,
       canCommit: {},

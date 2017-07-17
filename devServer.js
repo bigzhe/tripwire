@@ -202,6 +202,7 @@ router.route('/logs')
 
 router.route('/model')
     .get((req, res) => {
+        // MODEL = storage.getItemSync('MODEL')
         res.json({
             model: MODEL,
             attackPattern: AttackPattern

@@ -1,9 +1,13 @@
 import AttackPattern from './attackPattern'
 
+var moment = require('moment');
+moment().format();
+
 export const unzipMODEL = (MODEL) => {
   MODEL = MODEL || {}
   const Model = MODEL.Model || []
   const Track = MODEL.Track || {}
+  const Statistic = MODEL.Statistic || {}
 
   let UserView = {}, StateView = {}
   Model.forEach(({user_id, state_id, commitTime}) => {
@@ -19,7 +23,7 @@ export const unzipMODEL = (MODEL) => {
     StateView[state_id].push(user_id)
   })
   
-  return {UserView, StateView, Track}
+  return {UserView, StateView, Track, Statistic}
 }
 
 export const zipMODEL = (MODEL) => {
@@ -36,7 +40,7 @@ export const zipMODEL = (MODEL) => {
       })
     })
   })
-  return {Model: result, Track: MODEL.Track}
+  return {Model: result, Track: MODEL.Track, Statistic: MODEL.Statistic}
 }
 
 //
@@ -50,6 +54,8 @@ const filterPattern = (pattern, target) => {
   })
   return result
 }
+
+export const parseDate = (date) => moment(date, 'DD/MM/YYYY HH:mm')
 
 // get moves
 export const parseLog = (model, tuple) => {
@@ -73,9 +79,12 @@ export const parseLog = (model, tuple) => {
   }
 
   const isExpiredMove = (commitTime, moveTo) => {
-    return new Date(now) - new Date(commitTime) > pattern[moveTo].timeout
+    // 14/01/2013 10:51
+    return parseDate(now).diff(parseDate(commitTime), 'minutes') > pattern[moveTo].timeout
+    // return new Date(now) - new Date(commitTime) > pattern[moveTo].timeout
   }
   const isExpiredState = (state) => {
+    if (pattern[state.id].isOutcome) return false
     // const commitTime = model.UserView[user].find(elem => elem.id === stateId).commitTime
     return pattern[state.id].children.reduce((a,b) => {
       if (!a) return false
@@ -99,8 +108,18 @@ export const parseLog = (model, tuple) => {
             // not expired
             // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
             if (!isExpiredMove(s.commitTime, c)) {
+
+        if (s.id === 's1' && c === 's2') {
+          console.log('------------------------------------');
+          console.log(now)
+          console.log(s.commitTime)
+          // console.log(parseDate(now) - parseDate(s.commitTime));
+          console.log(pattern[c].timeout)
+          console.log('------------------------------------');
+        }
               // console.log('not expired')
               // when two moves to the same node
+              // parseDate(map[c])
               if (!map[c] || new Date(map[c].commitTime) < new Date(s.commitTime)) { // use the larger (later) commit time
                 map[c] = {...s}
                 // id
@@ -245,37 +264,38 @@ export const modelReducer = (state, action) => {
       moves.forEach(move => {
         Track[user][move.from + ' ' + move.to] = now
       })
-      // const moves = []
-      // action.moves.forEach(move => {
-      //   // const pattern = AttackPattern.states
-      //   // if (isExpiredMove(move.fromTime, move.to)) { // expired
-      //   if (false) {
-      //   // if (new Date() - new Date(move.fromTime) > pattern[move.to].timeout) { // expired
-      //     console.log('expired')
-      //     // TODO: handle the expired -- dfs to delete expired nodes
-      //     const trace = traceBack(move.from, user, Track)
-          
-      //     trace.forEach(s => {
-      //       if (isExpiredTuple(s)) {
-      //         console.log('delete', s, 'index', updatedUserView.findIndex(elem=>elem.id===s))
-      //         // remove the elem with an id equals to s
-      //         updatedUserView.splice(
-      //           updatedUserView.findIndex(elem=>elem.id===s), 
-      //           1
-      //         )
-      //         updatedStateView[s]= removeState(user, updatedStateView[s])
-      //         // console.log('problem', updatedUserView);
-      //       }
 
-      //     })
-          
-      //   } else {
-      //     moves.push(move)
-      //     Track[user][move.from + ' ' + move.to] = new Date()
-      //   }
-      // })
-      // console.log(updatedUserView);
-      
+      // Statistic
+      let Statistic = {...state.Statistic}
+      // update number of moves
+      Statistic.moves = Statistic.moves || {}
+      Statistic.traces = Statistic.traces || {}
+      Statistic.timeouts = Statistic.timeouts || {}
+      moves.forEach(move => {
+
+        if (move.to !== 's0') {
+          Statistic.moves[user] = Statistic.moves[user] || {}
+          Statistic.moves[user][move.from + ' ' + move.to] = Statistic.moves[user][move.from + ' ' + move.to] || 0
+          Statistic.moves[user][move.from + ' ' + move.to]++
+        }
+
+        // record the timeout event
+        if (move.to === 's0') {
+          Statistic.timeouts[user] = Statistic.timeouts[user] || {}
+          Statistic.timeouts[user][move.from] = Statistic.timeouts[user][move.from] || 0
+          Statistic.timeouts[user][move.from]++
+        }
+
+        // record the trace of an attack
+        if (pattern[move.to].isOutcome) {
+          Statistic.traces[user] = Statistic.traces[user] || {}
+          Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] = Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] || 0
+          Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')]++
+        }
+        
+      })
+  
+
       // user view
       const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
       const tos = Array.from(new Set(moves.map((m) => m.to)));
@@ -317,6 +337,7 @@ export const modelReducer = (state, action) => {
         },
         StateView: updatedStateView,
         Track,
+        Statistic,
       }
 
 
