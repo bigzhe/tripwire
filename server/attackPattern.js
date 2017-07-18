@@ -22,30 +22,9 @@ const AttackPattern = {
               return false
           }
         },
-        // s5: (tuple) => {
-        //   const {user, device, activity, key_data} = tuple
-        //   switch (activity) {
-        //     case 'file':
-        //       console.log(key_data)
-        //       if (key_data.Path.startsWith("/admin"))
-        //         return true
-        //       break;          
-        //     default:
-        //       return false
-        //   }
-        // },
-        // s6: (tuple) => {
-        //   const {user, device, activity, key_data} = tuple
-        //   switch (activity) {
-        //     case 'email':
-        //       // console.log(key_data)
-        //       // if (key_data.Path.startsWith("/admin"))
-        //       return true
-        //       break;          
-        //     default:
-        //       return false
-        //   }
-        // },
+      },
+      timeout: {
+        s1: 999999999999999999999999999,
       },
       pattern: 'pattern1'
     },
@@ -55,7 +34,9 @@ const AttackPattern = {
       info: '',
       children: ['s2'],
       parents: ['s0'],
-      timeout: 99999999999999999999,
+      timeout: {
+        s2: 1, 
+      },
       fy: 600,
       // canCommit: (user, action) => action.includes('s1'),
       canCommit: {
@@ -81,7 +62,10 @@ const AttackPattern = {
       children: ['s3', 's4'],
       parents: ['s1'],
       // timeout: 1 * 60 * 60000,
-      timeout: 60,
+      timeout: {
+        s3: 60,
+        s4: 60,
+      },
       // fx: 350,
       fy: 400,
       // canCommit: (user, action) => action.includes('s2'),
@@ -115,7 +99,9 @@ const AttackPattern = {
       info: '',
       children: ['s4'],
       parents: ['s2'],
-      timeout: 30,
+      timeout: {
+        s4: 30,
+      },
       fy: 300,
       canCommit: {
         s4: (tuple) => {
@@ -138,7 +124,7 @@ const AttackPattern = {
       info: '',
       children: [],
       parents: ['s2', 's3'],
-      timeout: 30,
+      timeout: {},
       fx: 100,
       fy: 200,
       canCommit: {},

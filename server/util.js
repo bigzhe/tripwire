@@ -78,17 +78,17 @@ export const parseLog = (model, tuple) => {
     })
   }
 
-  const isExpiredMove = (commitTime, moveTo) => {
+  const isExpiredMove = (commitTime, moveFrom, moveTo) => {
     // 14/01/2013 10:51
-    return parseDate(now).diff(parseDate(commitTime), 'minutes') > pattern[moveTo].timeout
-    // return new Date(now) - new Date(commitTime) > pattern[moveTo].timeout
+    // return parseDate(now).diff(parseDate(commitTime), 'minutes') > pattern[moveTo].timeout
+    return parseDate(now).diff(parseDate(commitTime), 'minutes') > pattern[moveFrom].timeout[moveTo]
   }
   const isExpiredState = (state) => {
     if (pattern[state.id].isOutcome) return false
     // const commitTime = model.UserView[user].find(elem => elem.id === stateId).commitTime
     return pattern[state.id].children.reduce((a,b) => {
       if (!a) return false
-      return isExpiredMove(state.commitTime, b)
+      return isExpiredMove(state.commitTime, state.id, b)
     }, true)
   }
 
@@ -107,16 +107,16 @@ export const parseLog = (model, tuple) => {
           if (pattern[s.id].canCommit[c](tuple)  ) {
             // not expired
             // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
-            if (!isExpiredMove(s.commitTime, c)) {
+            if (!isExpiredMove(s.commitTime, s.id, c)) {
 
-        if (s.id === 's1' && c === 's2') {
-          console.log('------------------------------------');
-          console.log(now)
-          console.log(s.commitTime)
-          // console.log(parseDate(now) - parseDate(s.commitTime));
-          console.log(pattern[c].timeout)
-          console.log('------------------------------------');
-        }
+        // if (s.id === 's1' && c === 's2') {
+        //   console.log('------------------------------------');
+        //   console.log(now)
+        //   console.log(s.commitTime)
+        //   // console.log(parseDate(now) - parseDate(s.commitTime));
+        //   console.log(pattern[c].timeout)
+        //   console.log('------------------------------------');
+        // }
               // console.log('not expired')
               // when two moves to the same node
               // parseDate(map[c])
