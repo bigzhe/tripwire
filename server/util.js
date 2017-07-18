@@ -288,9 +288,13 @@ export const modelReducer = (state, action) => {
 
         // record the trace of an attack
         if (pattern[move.to].isOutcome) {
-          Statistic.traces[user] = Statistic.traces[user] || {}
-          Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] = Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] || 0
-          Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')]++
+          const trace = traceBack(move.to, user, Track, pattern).join(' ')
+          Statistic.traces[trace] = Statistic.traces[trace] || []
+          Statistic.traces[trace].push({user, time: now})
+
+          // Statistic.traces[user] = Statistic.traces[user] || {}
+          // Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] = Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] || 0
+          // Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')]++
         }
         
       })
