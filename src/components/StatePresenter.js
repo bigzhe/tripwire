@@ -33,7 +33,7 @@ const StatePresenter = ({id, users, patterns, Track}) => {
       <List bulleted>
         {Object.entries(pattern).map(([k,v])=> 
           <List.Item key={k}>
-            {k}: {k === 'canCommit' ? 
+            {k}: {k === 'canCommit' || k === 'timeout' ? 
               Object.entries(v).map(([k2, v2]) => 
                 <List.Item key={k2}>{k2}: {v2}</List.Item>
               )
