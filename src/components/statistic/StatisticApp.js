@@ -4,9 +4,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import {Grid, Image, Container, Menu, Divider} from 'semantic-ui-react'
 
-import StaticGraph from './StaticGraph'
+import StatisticPresenterContainer from '../../containers/StatisticPresenterContainer'
+import LiveGraphContainer from '../../containers/LiveGraphContainer'
 
-import * as api from '../api'
+import * as api from '../../api'
 
 class StatisticAppComponent extends Component {
   componentWillMount () {
@@ -28,16 +29,11 @@ class StatisticAppComponent extends Component {
             <Grid.Row>
               <Grid.Column>
                 <Grid.Row>
-                  {/* <LogGenerator /> */}
-                </Grid.Row>
-                <br/>
-                <br/>
-                <Grid.Row>
-                  {/* <ModelPresenterContainer /> */}
+                   <StatisticPresenterContainer /> 
                 </Grid.Row>
               </Grid.Column>
               <Grid.Column>
-                {/* <StaticGraph/> */}
+                <LiveGraphContainer />
               </Grid.Column>
             </Grid.Row>
           </Grid>

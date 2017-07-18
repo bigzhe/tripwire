@@ -14,7 +14,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import reducers from './reducers';
 import App from './components/App';
 import PostTool from './components/PostTool'
-import StatisticApp from './components/StatisticApp'
+import StatisticApp from './components/statistic/StatisticApp'
 
 import { TARGET_URL } from './config'
 
