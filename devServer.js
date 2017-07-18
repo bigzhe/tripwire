@@ -39,6 +39,11 @@ io.on('connection', function(socket){
       // socket.emit('action', {type:'message', data:'good day!'});
       io.emit('action', {type:'message', data:'good day!'});
     }
+
+    if (action.type === 'server/disconnect') {
+        console.log('someone want to disconnet')
+        socket.disconnect()
+    }
   });
 
   socket.on('disconnect', function () {

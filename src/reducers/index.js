@@ -9,7 +9,7 @@ import snackbar from './snackbar'
 import presentFilter from './presentFilter'
 
 const todoApp = combineReducers({
-  todos,
+  // todos,
   visibilityFilter,
   model,
   // graphConfig,

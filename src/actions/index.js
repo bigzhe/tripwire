@@ -16,6 +16,12 @@ export const toggleTodo = (id) => ({
   id
 })
 
+// socket io
+export const disconnect = () => ({
+  type: 'server/disconnect',
+})
+
+
 // Parse log
 export const parseLog = (log) => ({
   type: 'PARSE_LOG',
