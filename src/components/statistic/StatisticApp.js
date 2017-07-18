@@ -7,7 +7,15 @@ import {Grid, Image, Container, Menu, Divider} from 'semantic-ui-react'
 import StatisticPresenterContainer from '../../containers/StatisticPresenterContainer'
 import LiveGraphContainer from '../../containers/LiveGraphContainer'
 
+import {setPresentFilter} from '../../actions'
+
 import * as api from '../../api'
+
+//
+// ──────────────────────────────────────────────────────────── I ──────────
+//   :::::: I M P O R T   C S S : :  :   :    :     :        :          :
+// ──────────────────────────────────────────────────────────────────────
+//
 
 class StatisticAppComponent extends Component {
   componentWillMount () {
@@ -23,7 +31,7 @@ class StatisticAppComponent extends Component {
         <Menu>
           <Menu.Item header>Statistic</Menu.Item>
         </Menu>
-        <Container>
+        <Container >
 
           <Grid columns={2}>
             <Grid.Row>
@@ -53,6 +61,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchModel: () => {
     return api.fetchModel().then(
       response => {
+        dispatch(setPresentFilter('OverView'))
         dispatch({type: 'server/disconnect'})
         dispatch({type: 'INIT_MODEL', data: response.model})
         dispatch({type: 'INIT_ATTACKPATTERN', data: response.attackPattern})
