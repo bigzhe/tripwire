@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -11,15 +11,9 @@ import {setPresentFilter} from '../../actions'
 
 import * as api from '../../api'
 
-//
-// ──────────────────────────────────────────────────────────── I ──────────
-//   :::::: I M P O R T   C S S : :  :   :    :     :        :          :
-// ──────────────────────────────────────────────────────────────────────
-//
-
 class StatisticAppComponent extends Component {
-  componentWillMount () {
-    const { fetchModel } = this.props
+  componentWillMount() {
+    const {fetchModel} = this.props
     console.log('will mount')
     fetchModel()
   }
@@ -27,7 +21,7 @@ class StatisticAppComponent extends Component {
   render() {
     return (
       <MuiThemeProvider>
-      <div>
+        <div>
         <Menu>
           <Menu.Item header>Statistic</Menu.Item>
         </Menu>
@@ -37,7 +31,7 @@ class StatisticAppComponent extends Component {
             <Grid.Row>
               <Grid.Column>
                 <Grid.Row>
-                   <StatisticPresenterContainer /> 
+                   <StatisticPresenterContainer />
                 </Grid.Row>
               </Grid.Column>
               <Grid.Column>
@@ -59,8 +53,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchModel: () => {
-    return api.fetchModel().then(
-      response => {
+    return api
+      .fetchModel()
+      .then(response => {
         dispatch(setPresentFilter('OverView'))
         dispatch({type: 'server/disconnect'})
         dispatch({type: 'INIT_MODEL', data: response.model})
@@ -68,9 +63,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch({type: 'REFRESH_GRAPHCONFIG'})
       }, error => {
         console.log('fetch error')
-      }
-    )
-  },
+      })
+  }
 })
 
 const StatisticApp = connect(mapStateToProps, mapDispatchToProps)(StatisticAppComponent)

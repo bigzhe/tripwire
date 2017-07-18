@@ -26,8 +26,12 @@ export default {
         query: {
           modules: true,
           localIdentName: '[name]__[local]___[hash:base64:5]'
-        }
-      }
+        },
+      },
+      { test: /bootstrap.+\.(jsx|js)$/, loader: 'imports?jQuery=jquery,$=jquery,this=>window' },
+        { test: /\.(svg|ttf|eot|svg|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=100000' },
+         {test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
+    {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
     ]
-  }
+  },
 };
