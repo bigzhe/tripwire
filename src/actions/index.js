@@ -33,6 +33,12 @@ export const highlightTrace = (trace) => ({
   type: 'HIGHLIGHT_TRACE',
   trace
 })
+
+export const setOverviewTrace = (trace) => ({
+  type: 'SET_OVERVIEW_TRACE',
+  trace
+})
+
 export const changeColor = (id, color) => ({
   type: 'CHANGE_COLOR',
   id,

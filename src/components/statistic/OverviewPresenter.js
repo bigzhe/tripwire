@@ -7,7 +7,7 @@ import TracePanel from './TracePanel'
 
 
 
-const OverviewPresenter = ({model, dispatchHighlightTrace}) => {
+const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) => {
 
   const traces = Object.keys(model.Statistic.traces)
 
@@ -38,7 +38,10 @@ const OverviewPresenter = ({model, dispatchHighlightTrace}) => {
 
   const handleTraceClick = (index, trace) => {
     console.log(trace)
-    dispatchHighlightTrace(trace)
+    if (trace === overviewFilter.OverView.trace) {
+      trace = ''
+    }
+    dispatchSetOverviewTrace(trace)
   }
 
 

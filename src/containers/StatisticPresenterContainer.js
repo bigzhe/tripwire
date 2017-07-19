@@ -8,6 +8,7 @@ import {
   updateLabel,
   setPresentFilter,
   highlightTrace,
+  setOverviewTrace,
 } from '../actions'
 import StatisticPresenter from '../components/statistic/StatisticPresenter'
 
@@ -16,6 +17,7 @@ const mapStateToProps = (state) => {
     model: state.model,
     presentFilter: state.presentFilter,
     attackPattern: state.attackPattern,
+    overviewFilter: state.overviewFilter,
   }
 }
 
@@ -26,6 +28,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatchHighlightTrace: (trace) => {
     dispatch(highlightTrace(trace))
   },
+  dispatchSetOverviewTrace: (trace) => {
+    dispatch(setOverviewTrace(trace))
+  }
 })
 
 const StatisticPresenterContainer = connect(mapStateToProps, mapDispatchToProps)(StatisticPresenter)

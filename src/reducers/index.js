@@ -7,6 +7,7 @@ import attackPattern from './attackPattern'
 import log from './log'
 import snackbar from './snackbar'
 import presentFilter from './presentFilter'
+import overviewFilter from './overviewFilter'
 
 const todoApp = combineReducers({
   // todos,
@@ -17,6 +18,7 @@ const todoApp = combineReducers({
   attackPattern,
   snackbar,
   presentFilter,
+  overviewFilter,
 })
 
 export default todoApp

@@ -8,7 +8,7 @@ import OverviewPresenter from './OverviewPresenter'
 class StatisticPresenter extends React.Component {
   render() {
 
-    const {model, presentFilter, dispatchSetPresentFilter, attackPattern, dispatchHighlightTrace} = this.props
+    const {model, overviewFilter, presentFilter, dispatchSetPresentFilter, attackPattern, dispatchSetOverviewTrace} = this.props
     let id, users
     if (presentFilter.showType === 'StateView') {
       id = presentFilter.id
@@ -21,7 +21,7 @@ class StatisticPresenter extends React.Component {
     } else {
       switch (presentFilter.showType) {
         case 'OverView':
-          presenter = <OverviewPresenter model={model} dispatchHighlightTrace={dispatchHighlightTrace}/>
+          presenter = <OverviewPresenter {...{model, overviewFilter, dispatchSetOverviewTrace}}/>
           break
         case 'UserView':
           presenter = (
