@@ -39,13 +39,14 @@ const updatedConfigOfNodes = (sArr, state, updateAttrs) => {
   return updatedConfig
 }
 
+const selectedColor = '#757575'
+
+// #757575 hightlight
+
 const updatedConfigOfLinks = (state) => {
 
   let updatedConfig = {...state.GraphConfig.updatedConfig.links}
   updatedConfig = {
-    's0 s1': {
-      strokeWidth: 5
-    }
   }
   return updatedConfig
 }
@@ -65,6 +66,14 @@ const updatedStateWithConfig = (sArr, state, updateAttrs) => {
       }
     }
   }
+}
+
+const removeAllHighlight = (links) => {
+  const updatedLinks = {...links}
+  Object.keys(updatedLinks).forEach(link => {
+    delete updatedLinks[link].color
+  })
+  return updatedLinks
 }
 
 const model = (state = 'Loading', action) => {
@@ -114,6 +123,39 @@ const model = (state = 'Loading', action) => {
     // *****************************
     // Presenting the balabala
     // *****************************
+    case 'HIGHLIGHT_TRACE':
+      // action.trace s0 s1 s2 s3 s4
+      const arr = action.trace.split(' ')
+      if (arr.length <= 1) return state
+      const moves = arr.slice(0, arr.length-1).map((e, i) => [e, arr.slice(1, arr.length)[i]])
+      const updatedLinks = removeAllHighlight(state.GraphConfig.updatedConfig.links)
+
+      moves.forEach(move => {
+        const key = move.join(' ')
+        updatedLinks[key] = updatedLinks[key] || {}
+        updatedLinks[key].color = selectedColor
+      })
+      return {
+        ...state,
+        GraphConfig: {
+          ...state.GraphConfig,
+          updatedConfig: {
+            ...state.GraphConfig.updatedConfig,
+            links: updatedLinks
+          }
+        }
+      }
+    case 'CANCEL_HIGHLIGHT':
+      return {
+        ...state,
+        GraphConfig: {
+          ...state.GraphConfig,
+          updatedConfig: {
+            ...state.GraphConfig.updatedConfig,
+            links: removeAllHighlight(state.GraphConfig.updatedConfig.links)
+          }
+        }
+      }
     case 'CHANGE_COLOR':
       // action: id, color
       return updatedStateWithConfig(

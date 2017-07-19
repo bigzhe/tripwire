@@ -7,6 +7,7 @@ import {
   changeSize,
   updateLabel,
   setPresentFilter,
+  highlightTrace,
 } from '../actions'
 import StatisticPresenter from '../components/statistic/StatisticPresenter'
 
@@ -21,6 +22,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatchSetPresentFilter: (showType, id) => {
     dispatch(setPresentFilter(showType, id))
+  },
+  dispatchHighlightTrace: (trace) => {
+    dispatch(highlightTrace(trace))
   },
 })
 
