@@ -39,6 +39,11 @@ export const setOverviewTrace = (trace) => ({
   trace
 })
 
+export const setOverviewTransition = (transition) => ({
+  type: 'SET_OVERVIEW_TRANSITION',
+  transition
+})
+
 export const changeColor = (id, color) => ({
   type: 'CHANGE_COLOR',
   id,
@@ -114,4 +119,9 @@ export const setPresentFilter = (showType, id) => ({
   type: 'SET_PRESENT_FILTER',
   showType, 
   id: id || undefined
+})
+
+export const setOverviewFilter = (showType) => ({
+  type: 'SET_OVERVIEW_FILTER',
+  showType, 
 })

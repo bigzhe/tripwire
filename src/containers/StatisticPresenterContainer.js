@@ -7,8 +7,10 @@ import {
   changeSize,
   updateLabel,
   setPresentFilter,
+  setOverviewFilter,
   highlightTrace,
   setOverviewTrace,
+  setOverviewTransition,
 } from '../actions'
 import StatisticPresenter from '../components/statistic/StatisticPresenter'
 
@@ -30,7 +32,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dispatchSetOverviewTrace: (trace) => {
     dispatch(setOverviewTrace(trace))
-  }
+  },
+  dispatchSetOverviewFilter: (showType) => {
+    dispatch(setOverviewFilter(showType))
+  },
+  dispatchSetOverviewTransition: (transition) => {
+    dispatch(setOverviewTransition(transition))
+  },
 })
 
 const StatisticPresenterContainer = connect(mapStateToProps, mapDispatchToProps)(StatisticPresenter)

@@ -64,9 +64,7 @@ const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) =>
               />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <Header>Moves</Header>
-          </Grid.Row>
+
         </Grid>
 
       </Container>

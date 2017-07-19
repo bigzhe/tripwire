@@ -7,7 +7,7 @@ import {Grid, Image, Container, Menu, Divider} from 'semantic-ui-react'
 import StatisticPresenterContainer from '../../containers/StatisticPresenterContainer'
 import LiveGraphContainer from '../../containers/LiveGraphContainer'
 
-import {setPresentFilter} from '../../actions'
+import {setOverviewFilter} from '../../actions'
 
 import * as api from '../../api'
 
@@ -61,7 +61,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     return api
       .fetchModel()
       .then(response => {
-        dispatch(setPresentFilter('Trace'))
+        dispatch(setOverviewFilter('TraceView'))
         dispatch({type: 'server/disconnect'})
         dispatch({type: 'INIT_MODEL', data: response.model})
         dispatch({type: 'INIT_ATTACKPATTERN', data: response.attackPattern})

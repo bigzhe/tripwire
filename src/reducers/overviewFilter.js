@@ -3,6 +3,9 @@ const initialState = {
   OverView: {
     // trace: ''
   },
+  TransitionView: {
+
+  },
   UserView: {},
   StateView: {},
 }
@@ -10,6 +13,11 @@ const initialState = {
 
 const overviewFilter = (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_OVERVIEW_FILTER':
+      return {
+        ...state,
+        showType: action.showType,
+      }
     case 'SET_OVERVIEW_TRACE':
       // action.trace
       return {
@@ -17,6 +25,14 @@ const overviewFilter = (state = initialState, action) => {
         OverView: {
           ...state.OverView,
           trace: action.trace
+        }
+      }
+    case 'SET_OVERVIEW_TRANSITION':
+      return {
+        ...state,
+        OverView: {
+          ...state.OverView,
+          transition: action.transition
         }
       }
     default:
