@@ -25,34 +25,6 @@ const GraphConfig = {
 const sizeOfANode = (s, state) => state.StateView[s].length * 100 + 120
 const labelOfANode = (s, state) => s + '\n' + state.StateView[s].join(', ')
 
-// const updatedConfigOfNodes = (sArr, state, updateAttrs) => {
-//   // sArr: s1, s2, moveFrom
-//   // updateAttrs: {size, sizeOfANode}
-//   let updatedConfig = {...state.GraphConfig.updatedConfig}
-//   console.log('sArr', sArr)
-//   sArr.forEach((s) => {
-//     updatedConfig[s] = updatedConfig[s] || {}
-//     Object.entries(updateAttrs).forEach(([attr, func]) => {
-//       updatedConfig[s][attr] = func(s, state)
-//     })
-//   })
-//   return updatedConfig
-// }
-
-// const updatedStateWithConfig = (sArr, state, updateAttrs) => {
-//   return {
-//     ...state,
-//     GraphConfig: {
-//       ...state.GraphConfig,
-//       updatedConfig: updatedConfigOfNodes(
-//         sArr,
-//         state,
-//         updateAttrs
-//       )
-//     }
-//   }
-// }
-
 const updatedConfigOfNodes = (sArr, state, updateAttrs) => {
   // sArr: s1, s2, moveFrom
   // updateAttrs: {size, sizeOfANode}

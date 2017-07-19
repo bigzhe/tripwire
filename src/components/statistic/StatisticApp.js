@@ -25,16 +25,15 @@ class StatisticAppComponent extends Component {
         <Menu>
           <Menu.Item header>Statistic</Menu.Item>
         </Menu>
-        <Container >
+        <Container fluid style={divStyle}>
 
-          <Grid columns={2}>
+          <Grid>
             <Grid.Row>
-              <Grid.Column>
-                <Grid.Row>
-                   <StatisticPresenterContainer />
-                </Grid.Row>
+              <Grid.Column width={11}>
+                <StatisticPresenterContainer />
               </Grid.Column>
-              <Grid.Column>
+                
+              <Grid.Column width={5}>
                 <LiveGraphContainer />
               </Grid.Column>
             </Grid.Row>
@@ -46,6 +45,12 @@ class StatisticAppComponent extends Component {
     )
   }
 }
+
+const divStyle = {
+  // background: "#eee",
+  padding: "20px",
+  // margin: "20px"
+};
 
 const mapStateToProps = (state) => {
   return {}

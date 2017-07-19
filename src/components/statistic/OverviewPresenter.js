@@ -1,11 +1,23 @@
 import React from 'react'
-import {Container, Button, Header, List, Divider, Accordion, Icon, Table} from 'semantic-ui-react'
+import {Table, Grid, Container, Button, Header, List, Divider, Accordion, Icon} from 'semantic-ui-react'
+
+import ReactTable from 'react-table'
 
 import TracePanel from './TracePanel'
+
+
 
 const OverviewPresenter = ({model, patterns}) => {
 
   const traces = Object.keys(model.Statistic.traces)
+
+  const columns = [{
+    Header: 'User',
+    accessor: 'user' // String-based value accessors! 
+  }, {
+    Header: 'Time',
+    accessor: 'time',
+  }]
 
   const buildTracePanel = (trace) => { 
     return [
@@ -14,22 +26,12 @@ const OverviewPresenter = ({model, patterns}) => {
         {trace.replace(/ /g, ' -> ')}
       </Accordion.Title>),
       (<Accordion.Content>
-        <Table collapsing>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>User</Table.HeaderCell>
-              <Table.HeaderCell>Time</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {model.Statistic.traces[trace].map((record, i) => (
-              <Table.Row key={record.user + record.time + i}>
-                <Table.Cell>{record.user}</Table.Cell>
-                <Table.Cell>{record.time}</Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        <ReactTable
+          data={model.Statistic.traces[trace]}
+          columns={columns}
+          defaultPageSize={10}
+          filterable={false}
+        />
       </Accordion.Content>)
     ]
   }
@@ -39,13 +41,25 @@ const OverviewPresenter = ({model, patterns}) => {
     console.log(index)
   }
 
+
+
   return (
     <div>
-      <Container>
-        <Header>Complete attack traces</Header>
-        <Accordion exclusive={true} onTitleClick={(event, index) => handleTraceClick(index, traces[index])}>
-           {traces.map(trace => buildTracePanel(trace) )} 
-        </Accordion>
+      <Container fluid>
+        <Grid >
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <Header>Complete attack traces</Header>
+              <Accordion exclusive={true} onTitleClick={(event, index) => handleTraceClick(index, traces[index])}>
+                {traces.map(trace => buildTracePanel(trace) )} 
+              </Accordion>
+            </Grid.Column>
+            <Grid.Column width={11}>
+
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+
       </Container>
     </div>
   )

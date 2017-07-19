@@ -47,7 +47,7 @@ class StatisticPresenter extends React.Component {
     }
 
     return (
-      <Container>
+      <Container fluid>
         <Header >
           Statistic interface for pattern 1
           <Header.Subheader>
@@ -59,7 +59,7 @@ class StatisticPresenter extends React.Component {
           <Menu.Item name='User' active={presentFilter.showType === 'UserView'} onClick={() => dispatchSetPresentFilter('UserView')} />
           <Menu.Item name='State' active={presentFilter.showType === 'StateView'} onClick={() => dispatchSetPresentFilter('StateView')} />
         </Menu>
-
+      
         {presenter}
       </Container>
     )
