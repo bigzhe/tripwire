@@ -4,7 +4,7 @@ import {Table, Grid, Container, Button, Header, List, Divider, Accordion, Icon} 
 import ReactTable from 'react-table'
 
 import TracePanel from './TracePanel'
-
+import OverviewCharts from './OverviewCharts'
 
 
 const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) => {
@@ -19,11 +19,11 @@ const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) =>
     accessor: 'time',
   }]
 
-  const buildTracePanel = (trace) => { 
+  const buildTracePanel = (trace, i) => { 
     return [
       (<Accordion.Title>
         <Icon name='dropdown' />
-        {trace.replace(/ /g, ' -> ')}
+        {i+1}: {trace.replace(/ /g, ' -> ')}
       </Accordion.Title>),
       (<Accordion.Content>
         <ReactTable
@@ -54,12 +54,18 @@ const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) =>
             <Grid.Column width={5}>
               <Header>Complete attack traces</Header>
               <Accordion exclusive={true} onTitleClick={(event, index) => handleTraceClick(index, traces[index])}>
-                {traces.map(trace => buildTracePanel(trace) )} 
+                {traces.map((trace, i) => buildTracePanel(trace, i) )} 
               </Accordion>
             </Grid.Column>
             <Grid.Column width={11}>
-
+              <OverviewCharts 
+                data={model.Statistic}
+                overviewFilter={overviewFilter}
+              />
             </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Header>Moves</Header>
           </Grid.Row>
         </Grid>
 

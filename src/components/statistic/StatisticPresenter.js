@@ -20,7 +20,7 @@ class StatisticPresenter extends React.Component {
       presenter = <Header>Loading</Header>
     } else {
       switch (presentFilter.showType) {
-        case 'OverView':
+        case 'Trace':
           presenter = <OverviewPresenter {...{model, overviewFilter, dispatchSetOverviewTrace}}/>
           break
         case 'UserView':
@@ -55,7 +55,8 @@ class StatisticPresenter extends React.Component {
           </Header.Subheader>
         </Header>
         <Menu tabular>
-          <Menu.Item name='Overview' active={presentFilter.showType === 'OverView'} onClick={() => dispatchSetPresentFilter('OverView')} />
+          <Menu.Item name='Trace' active={presentFilter.showType === 'Trace'} onClick={() => dispatchSetPresentFilter('Trace')} />
+          <Menu.Item name='Transition' active={presentFilter.showType === 'Transition'} onClick={() => dispatchSetPresentFilter('Transition')} />
           <Menu.Item name='User' active={presentFilter.showType === 'UserView'} onClick={() => dispatchSetPresentFilter('UserView')} />
           <Menu.Item name='State' active={presentFilter.showType === 'StateView'} onClick={() => dispatchSetPresentFilter('StateView')} />
         </Menu>
