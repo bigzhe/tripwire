@@ -61,7 +61,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     return api
       .fetchModel()
       .then(response => {
-        dispatch(setOverviewFilter('TraceView'))
         dispatch({type: 'server/disconnect'})
         dispatch({type: 'INIT_MODEL', data: response.model})
         dispatch({type: 'INIT_ATTACKPATTERN', data: response.attackPattern})

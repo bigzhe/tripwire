@@ -49,7 +49,7 @@ const OverviewCharts = ({data, overviewFilter}) => {
     let users = getUsers(traces)
     let data = processTraces(traces)
     const colors = randomColor({
-
+      seed: 120,
       count: users.length
     });
 
@@ -73,7 +73,7 @@ const OverviewCharts = ({data, overviewFilter}) => {
     let users = getUsers(traces)
     let data = processUsers(users, traces)
     const colors = randomColor({
-
+      seed: 50,
       hue: 'grey',
       count: Object.keys(users).length
     });

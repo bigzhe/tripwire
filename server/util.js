@@ -55,7 +55,7 @@ const filterPattern = (pattern, target) => {
   return result
 }
 
-export const parseDate = (date) => moment(date, 'DD/MM/YYYY HH:mm')
+export const parsedDate = (date) => moment(date, 'DD/MM/YYYY HH:mm')
 
 // get moves
 export const parseLog = (model, tuple) => {
@@ -80,8 +80,8 @@ export const parseLog = (model, tuple) => {
 
   const isExpiredMove = (commitTime, moveFrom, moveTo) => {
     // 14/01/2013 10:51
-    // return parseDate(now).diff(parseDate(commitTime), 'minutes') > pattern[moveTo].timeout
-    return parseDate(now).diff(parseDate(commitTime), 'minutes') > pattern[moveFrom].timeout[moveTo]
+    // return parsedDate(now).diff(parsedDate(commitTime), 'minutes') > pattern[moveTo].timeout
+    return parsedDate(now).diff(parsedDate(commitTime), 'minutes') > pattern[moveFrom].timeout[moveTo]
   }
   const isExpiredState = (state) => {
     if (pattern[state.id].isOutcome) return false
@@ -98,7 +98,7 @@ export const parseLog = (model, tuple) => {
     model.UserView[user].forEach((s) => {
       // check whether this is a expired state
       if (isExpiredState(s)) {
-        console.log('Expired state:', s.id)
+        // //console.log('Expired state:', s.id)
         moves.push({from: s.id, to: 's0'})
       } else {
         pattern[s.id].children.forEach((c) => {
@@ -108,25 +108,15 @@ export const parseLog = (model, tuple) => {
             // not expired
             // if (!pattern[s.id].timeout[c] || Date.now() - s.commitTime < pattern[s.id].timeout[c]) {
             if (!isExpiredMove(s.commitTime, s.id, c)) {
-
-        // if (s.id === 's1' && c === 's2') {
-        //   console.log('------------------------------------');
-        //   console.log(now)
-        //   console.log(s.commitTime)
-        //   // console.log(parseDate(now) - parseDate(s.commitTime));
-        //   console.log(pattern[c].timeout)
-        //   console.log('------------------------------------');
-        // }
-              // console.log('not expired')
               // when two moves to the same node
-              // parseDate(map[c])
-              if (!map[c] || new Date(map[c].commitTime) < new Date(s.commitTime)) { // use the larger (later) commit time
+              // parsedDate(map[c])
+              if (!map[c] || parsedDate(map[c].commitTime).isBefore(parsedDate(s.commitTime))) { // use the larger (later) commit time
                 map[c] = {...s}
                 // id
                 // commitTime
               }
             } else {
-              console.log('Expired!!!!!!!!!!!!!!!');
+              //console.log('Expired!!!!!!!!!!!!!!!');
             }
           }
         })
@@ -137,6 +127,9 @@ export const parseLog = (model, tuple) => {
   // moves.push({from: s.id, to: c, commitTime: Date.now()})
   Object.entries(map).forEach(([k, v]) => {
     moves.push({from: v.id, to: k})
+    if (v.id === 's3' && k === 's4') {
+      //console.log(tuple, model.Track['lbegum1962'])
+    }
   })
 
   return moves
@@ -167,7 +160,7 @@ const insertState = (id, arr) => {
 }
 
 export const traceBack = (stateId, userId, Track, pattern) => {
-  // console.log('trace back');
+  // //console.log('trace back');
   // const pattern = AttackPattern.states
   if (stateId === 's0') return []
   let result = [stateId]
@@ -176,23 +169,32 @@ export const traceBack = (stateId, userId, Track, pattern) => {
     return result
   }
   const largest = initialTransitions.reduce((a,b) => {
-    return new Date(a) > new Date(b) ? a : b
+    return parsedDate(a).isAfter(parsedDate(b)) ? a : b
   })
-  // console.log('largest', largest)
+  //console.log('largest', largest)
 
   const dfs = (currentNode) => {
     const transitions = pattern[currentNode].parents.map(parent => parent + ' ' + currentNode).filter(n => Track[userId][n] != undefined)
-    // console.log(transitions)
+    // //console.log(transitions)
     if (!transitions.length) 
       return
     else {
       let targetTransition = transitions.reduce((a,b) => {
-        if (!a && Track[userId][b] > largest) {
+          if (stateId === 's4' && userId === 'lbegum1962') {
+            //console.log(a, b)
+            //console.log(parsedDate(Track[userId][b]), parsedDate(largest))
+          }
+        if (!a && parsedDate(Track[userId][b]).isAfter(parsedDate(largest))) {
+          // if (stateId === 's4' && userId === 'cwilki1951') {
+          //   //console.log(a, b)
+          //   //console.log(new Date(Track[userId][b]), new Date(largest))
+          // }
           return undefined
-        } else if (!a && Track[userId][b] <= largest) {
+        } else if (!a && !parsedDate(Track[userId][b]).isAfter(parsedDate(largest))) {
           return b
         } else {
-          if (Track[userId][a] < Track[userId][b] && Track[userId][b] < largest)  {
+          if (parsedDate(Track[userId][a]).isBefore(parsedDate(Track[userId][b])) 
+            && !parsedDate(Track[userId][b]).isAfter(parsedDate(largest)))  {
             return b
           } else {
             return a
@@ -202,6 +204,10 @@ export const traceBack = (stateId, userId, Track, pattern) => {
       }, undefined)
 
       if (targetTransition === undefined) { // all states were updated
+          // if (stateId === 's4' && userId === 'cwilki1951') {
+          //   //console.log(a, b)
+          //   //console.log(new Date(Track[userId][b]), new Date(largest))
+          // }
         return
       } else {
         const [from, to] = targetTransition.split(' ')
@@ -214,7 +220,11 @@ export const traceBack = (stateId, userId, Track, pattern) => {
   }
   dfs(stateId)
   result = result.reverse()
-  console.log('result', result)
+  if (result.length === 1) {
+    // //console.log (stateId, userId, Track[userId])
+    return 'adfasdfadsfasd'
+  }
+  // //console.log('result', result)
   return result
 } 
 
@@ -232,7 +242,7 @@ export const modelReducer = (state, action) => {
       //   from: 's3', to: 's4', fromTime
       // }
       // ]
-      // console.log(action)
+      // //console.log(action)
 
       const {user, device, activity, key_data} = action.tuple
       const now = key_data.Date
@@ -265,7 +275,40 @@ export const modelReducer = (state, action) => {
         Track[user][move.from + ' ' + move.to] = now
       })
 
-      // Statistic
+      // user view
+      const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
+      const tos = Array.from(new Set(moves.map((m) => m.to)));
+
+      // when the user id is not in the state
+      const findTupleByState = (stateId) => {
+        return updatedUserView.find(elem => elem.id === stateId)
+      }
+
+      // processing the move to s0 moves
+      moves.forEach(move => {
+        if (move.to === 's0') {
+          // deleteSet.push(move.from)
+          updatedUserView.splice(updatedUserView.findIndex(tuple => tuple.id === move.from), 1)
+          updatedStateView[move.from] = removeState(user, updatedStateView[move.from])
+        }
+      })
+
+      moves.forEach(move => {
+        let targetTuple = findTupleByState(move.to)
+        // //console.log(targetTuple)
+        if (targetTuple) {
+          targetTuple.commitTime = now
+        } else {
+          updatedUserView.push({id: move.to, commitTime: now})
+        }
+      })
+      // update user ivew
+
+      tos.forEach((t) => {
+        updatedStateView[t] = insertState(user, updatedStateView[t])
+      })
+
+            // Statistic
       let Statistic = {...state.Statistic}
       // update number of moves
       Statistic.moves = Statistic.moves || {}
@@ -289,48 +332,13 @@ export const modelReducer = (state, action) => {
         // record the trace of an attack
         if (pattern[move.to].isOutcome) {
           const trace = traceBack(move.to, user, Track, pattern).join(' ')
+          // //console.log('complete trace,', trace)
           Statistic.traces[trace] = Statistic.traces[trace] || []
           Statistic.traces[trace].push({user, time: now})
-
-          // Statistic.traces[user] = Statistic.traces[user] || {}
-          // Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] = Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')] || 0
-          // Statistic.traces[user][traceBack(move.to, user, Track, pattern).join(' ')]++
         }
-        
-      })
-  
 
-      // user view
-      const froms = Array.from(new Set(moves.map((m) => m.from).filter((e) => e)));
-      const tos = Array.from(new Set(moves.map((m) => m.to)));
 
-      // when the user id is not in the state
-      const findTupleByState = (stateId) => {
-        return updatedUserView.find(elem => elem.id === stateId)
-      }
-
-      // processing the move to s0 moves
-      moves.forEach(move => {
-        if (move.to === 's0') {
-          // deleteSet.push(move.from)
-          updatedUserView.splice(updatedUserView.findIndex(tuple => tuple.id === move.from), 1)
-          updatedStateView[move.from] = removeState(user, updatedStateView[move.from])
-        }
-      })
-
-      moves.forEach(move => {
-        let targetTuple = findTupleByState(move.to)
-        // console.log(targetTuple)
-        if (targetTuple) {
-          targetTuple.commitTime = now
-        } else {
-          updatedUserView.push({id: move.to, commitTime: now})
-        }
-      })
-      // update user ivew
-
-      tos.forEach((t) => {
-        updatedStateView[t] = insertState(user, updatedStateView[t])
+     
       })
 
       return {

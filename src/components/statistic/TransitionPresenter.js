@@ -4,29 +4,15 @@ import {Table, Grid, Container, Button, Header, List, Divider, Accordion, Icon} 
 import ReactTable from 'react-table'
 
 import TracePanel from './TracePanel'
-import OverviewCharts from './OverviewCharts'
+import TransitionCharts from './TransitionCharts'
 
 
-const TransitionPresenter = ({model, overviewFilter, dispatchSetOverviewTransition}) => {
+const TransitionPresenter = ({model, overviewFilter, dispatchSetOverviewTransition, dispatchHighlightTrace}) => {
 
   const users = Object.keys(model.Statistic.moves)
-  const flatObject = (o) => {
-    const result = []
-    Object.keys(o).forEach(key => {
-      o[key].forEach(tuple => {
-        result.push({
-          name: key,
-          ...tuple
-        })
-      })
-    })
-    return result
-  }  
   const parseMoves = (moves) => {
     const parsedMoves = {}
-    console.log(moves)
     users.forEach(user => {
-      console.log(user, moves[user]);
       Object.entries(moves[user]).forEach(([move, times]) => {
         parsedMoves[move] = parsedMoves[move] || []
         parsedMoves[move].push({
@@ -34,7 +20,6 @@ const TransitionPresenter = ({model, overviewFilter, dispatchSetOverviewTransiti
         })
       })
     })
-    console.log(parsedMoves)
     return parsedMoves
   }
 
@@ -68,11 +53,11 @@ const TransitionPresenter = ({model, overviewFilter, dispatchSetOverviewTransiti
   }
 
   const handleTransitionClick = (index, transition) => {
-    console.log(transition)
     if (transition === overviewFilter.OverView.transition) {
       transition = ''
     }
     dispatchSetOverviewTransition(transition)
+    dispatchHighlightTrace(transition)
   }
 
 
@@ -89,8 +74,8 @@ const TransitionPresenter = ({model, overviewFilter, dispatchSetOverviewTransiti
               </Accordion>
             </Grid.Column>
             <Grid.Column width={11}>
-              <OverviewCharts 
-                data={model.Statistic}
+              <TransitionCharts 
+                data={moves}
                 overviewFilter={overviewFilter}
               />
             </Grid.Column>

@@ -8,8 +8,18 @@ import TransitionPresenter from './TransitionPresenter'
 class StatisticPresenter extends React.Component {
   render() {
 
-    const {model, overviewFilter, presentFilter, dispatchSetOverviewFilter, attackPattern, dispatchSetOverviewTrace, dispatchSetOverviewTransition} = this.props
-    let id, users
+const {
+    model,
+    overviewFilter,
+    presentFilter,
+    dispatchSetOverviewFilter,
+    attackPattern,
+    dispatchSetOverviewTrace,
+    dispatchSetOverviewTransition,
+    dispatchHighlightTrace, 
+  } = this.props
+  let id,
+    users
     if (overviewFilter.showType === 'StateView') {
       id = overviewFilter.id
       users = model.StateView[overviewFilter.id]
@@ -21,10 +31,10 @@ class StatisticPresenter extends React.Component {
     } else {
       switch (overviewFilter.showType) {
         case 'TraceView':
-          presenter = <OverviewPresenter {...{model, overviewFilter, dispatchSetOverviewTrace}}/>
+          presenter = <OverviewPresenter {...{model, overviewFilter, dispatchSetOverviewTrace, dispatchHighlightTrace}}/>
           break
         case 'TransitionView':
-          presenter = <TransitionPresenter {...{model, overviewFilter, dispatchSetOverviewTransition}}/>
+          presenter = <TransitionPresenter {...{model, overviewFilter, dispatchSetOverviewTransition, dispatchHighlightTrace}}/>
           break
         case 'UserView':
           presenter = (

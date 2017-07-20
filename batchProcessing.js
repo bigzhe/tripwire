@@ -119,7 +119,7 @@ csv
 
     const tuple = tripwireParse(data)
     // console.log(tuple)
-    console.log(i++)
+    // console.log(i++)
 
     // update the model using the log
     let moves = parseLog(MODEL, tuple)

@@ -7,7 +7,7 @@ import TracePanel from './TracePanel'
 import OverviewCharts from './OverviewCharts'
 
 
-const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) => {
+const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace, dispatchHighlightTrace}) => {
 
   const traces = Object.keys(model.Statistic.traces)
 
@@ -42,6 +42,7 @@ const OverviewPresenter = ({model, overviewFilter, dispatchSetOverviewTrace}) =>
       trace = ''
     }
     dispatchSetOverviewTrace(trace)
+    dispatchHighlightTrace(trace)
   }
 
 

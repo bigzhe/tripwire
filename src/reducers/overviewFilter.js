@@ -1,5 +1,5 @@
 const initialState = {
-  showType: 'OverView',
+  showType: 'TransitionView',
   OverView: {
     // trace: ''
   },

@@ -123,8 +123,8 @@ const model = (state = 'Loading', action) => {
     // *****************************
     // Presenting the balabala
     // *****************************
-    // case 'HIGHLIGHT_TRACE':
-    case 'SET_OVERVIEW_TRACE':
+    case 'HIGHLIGHT_TRACE':
+    // case 'SET_OVERVIEW_TRACE':
       // action.trace s0 s1 s2 s3 s4
       const arr = action.trace.split(' ')
       if (arr.length <= 1) return {
