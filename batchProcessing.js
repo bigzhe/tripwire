@@ -122,11 +122,12 @@ csv
     // console.log(i++)
 
     // update the model using the log
-    let moves = parseLog(MODEL, tuple)
+    let {moves, expired} = parseLog(MODEL, tuple)
     MODEL = modelReducer(MODEL, {
         type: 'USER_MOVE_TO_MULTIPLE',
         tuple,
-        moves
+        moves,
+        expired
     })
 
   })

@@ -63,7 +63,7 @@ export const parseLog = (model, tuple) => {
   // const initialStates = getIntialStates(pattern)
   // dispatchUserMoveTo(id, moveFrom, moveTo, severalHoursLater(2))
   // let user = id
-  let moves = []
+  let moves = [], expired = []
   // {id, pc, action, date}
   const {user, device, activity, key_data} = tuple
 
@@ -92,7 +92,7 @@ export const parseLog = (model, tuple) => {
     }, true)
   }
 
-  let map = {}
+  let map = {}, expiredMap = {}
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
@@ -100,6 +100,14 @@ export const parseLog = (model, tuple) => {
       if (isExpiredState(s)) {
         // //console.log('Expired state:', s.id)
         moves.push({from: s.id, to: 's0'})
+        // add expired moves
+        pattern[s.id].children.forEach((c) => {
+          if (isExpiredMove(s.commitTime, s.id, c)) {
+            if (!expiredMap[c] || parsedDate(expiredMap[c].commitTime).isBefore(parsedDate(s.commitTime))) {
+              expiredMap[c] = {...s}
+            }
+          }
+        })
       } else {
         pattern[s.id].children.forEach((c) => {
           // can commit
@@ -127,12 +135,13 @@ export const parseLog = (model, tuple) => {
   // moves.push({from: s.id, to: c, commitTime: Date.now()})
   Object.entries(map).forEach(([k, v]) => {
     moves.push({from: v.id, to: k})
-    if (v.id === 's3' && k === 's4') {
-      //console.log(tuple, model.Track['lbegum1962'])
-    }
+  })
+  Object.entries(expiredMap).forEach(([k, v]) => {
+    expired.push({from: v.id, to: k})
   })
 
-  return moves
+  // console.log(expired)
+  return {moves, expired}
 
 }
 
@@ -247,6 +256,7 @@ export const modelReducer = (state, action) => {
       const {user, device, activity, key_data} = action.tuple
       const now = key_data.Date
       const moves = action.moves
+      const expired = action.expired
 
       // filter the expired moves
       let updatedStateView = {...state.StateView}
@@ -322,13 +332,6 @@ export const modelReducer = (state, action) => {
           Statistic.moves[user][move.from + ' ' + move.to]++
         }
 
-        // record the timeout event
-        if (move.to === 's0') {
-          Statistic.timeouts[user] = Statistic.timeouts[user] || {}
-          Statistic.timeouts[user][move.from] = Statistic.timeouts[user][move.from] || 0
-          Statistic.timeouts[user][move.from]++
-        }
-
         // record the trace of an attack
         if (pattern[move.to].isOutcome) {
           const trace = traceBack(move.to, user, Track, pattern).join(' ')
@@ -339,6 +342,13 @@ export const modelReducer = (state, action) => {
 
 
      
+      })
+
+      expired.forEach(move => {
+        // record the timeout event
+          Statistic.timeouts[user] = Statistic.timeouts[user] || {}
+          Statistic.timeouts[user][move.from + ' ' + move.to] = Statistic.timeouts[user][move.from + ' ' + move.to] || 0
+          Statistic.timeouts[user][move.from + ' ' + move.to]++
       })
 
       return {

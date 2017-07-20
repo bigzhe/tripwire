@@ -93,7 +93,8 @@ const model = (state = 'Loading', action) => {
       const updatedModel = modelReducer(state, {
         type: 'USER_MOVE_TO_MULTIPLE',
         tuple: action.tuple,
-        moves: action.moves
+        moves: action.moves,
+        expired: action.expired
       })
 
       return {

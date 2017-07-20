@@ -173,7 +173,7 @@ router.route('/logs')
         console.log(tuple)
 
         // update the model using the log
-        let moves = parseLog(MODEL, tuple)
+        let {moves, expired} = parseLog(MODEL, tuple)
 
         console.log('------MOVES-------------------------');
         console.log(moves);
@@ -187,7 +187,8 @@ router.route('/logs')
         MODEL = modelReducer(MODEL, {
             type: 'USER_MOVE_TO_MULTIPLE',
             tuple,
-            moves
+            moves,
+            expired
         })
 
         // store the new model
