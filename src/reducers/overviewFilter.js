@@ -43,6 +43,14 @@ const overviewFilter = (state = initialState, action) => {
           timeout: action.timeout
         }
       }
+    case 'SET_OVERVIEW_USER':
+      return {
+        ...state,
+        OverView: {
+          ...state.OverView,
+          user: action.user
+        }
+      }
     default:
       return state
   }

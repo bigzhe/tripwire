@@ -1,10 +1,9 @@
 import React from 'react'
 import {Divider, Container, List, Header, Menu} from 'semantic-ui-react'
-import UserPresenter from '../UserPresenter'
-import StatePresenter from '../StatePresenter'
 import OverviewPresenter from './OverviewPresenter'
 import TransitionPresenter from './TransitionPresenter'
 import TimeoutPresenter from './TimeoutPresenter'
+import UserPresenter from './UserPresenter'
 
 class StatisticPresenter extends React.Component {
   render() {
@@ -18,6 +17,7 @@ const {
     dispatchSetOverviewTrace,
     dispatchSetOverviewTransition,
     dispatchSetOverviewTimeout,
+    dispatchSetOverviewUser,
     dispatchHighlightTrace, 
   } = this.props
   let id,
@@ -42,15 +42,7 @@ const {
           presenter = <TimeoutPresenter {...{model, overviewFilter, dispatchSetOverviewTimeout, dispatchHighlightTrace}}/>
           break
         case 'UserView':
-          presenter = (
-            <Container>
-              {
-                Object.entries(model.UserView).map(([user,positions]) => 
-                  <UserPresenter key={user} {...{user,positions}} />
-                )
-              }
-            </Container>
-          )
+          presenter = <UserPresenter {...{model, overviewFilter, dispatchSetOverviewUser}}/>
           break
         case 'StateView':
           presenter = (

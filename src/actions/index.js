@@ -49,6 +49,11 @@ export const setOverviewTimeout = (timeout) => ({
   timeout
 })
 
+export const setOverviewUser = (user) => ({
+  type: 'SET_OVERVIEW_USER',
+  user
+})
+
 export const changeColor = (id, color) => ({
   type: 'CHANGE_COLOR',
   id,

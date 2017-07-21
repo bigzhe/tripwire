@@ -12,6 +12,7 @@ import {
   setOverviewTrace,
   setOverviewTransition,
   setOverviewTimeout,
+  setOverviewUser,
 } from '../actions'
 import StatisticPresenter from '../components/statistic/StatisticPresenter'
 
@@ -42,6 +43,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dispatchSetOverviewTimeout: (timeout) => {
     dispatch(setOverviewTimeout(timeout))
+  },
+  dispatchSetOverviewUser: (user) => {
+    dispatch(setOverviewUser(user))
   },
 })
 
