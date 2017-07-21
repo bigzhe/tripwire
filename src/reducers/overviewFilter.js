@@ -35,6 +35,14 @@ const overviewFilter = (state = initialState, action) => {
           transition: action.transition
         }
       }
+    case 'SET_OVERVIEW_TIMEOUT':
+      return {
+        ...state,
+        OverView: {
+          ...state.OverView,
+          timeout: action.timeout
+        }
+      }
     default:
       return state
   }

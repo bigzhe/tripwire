@@ -44,6 +44,11 @@ export const setOverviewTransition = (transition) => ({
   transition
 })
 
+export const setOverviewTimeout = (timeout) => ({
+  type: 'SET_OVERVIEW_TIMEOUT',
+  timeout
+})
+
 export const changeColor = (id, color) => ({
   type: 'CHANGE_COLOR',
   id,

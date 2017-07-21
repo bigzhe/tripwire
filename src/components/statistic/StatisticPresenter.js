@@ -4,6 +4,7 @@ import UserPresenter from '../UserPresenter'
 import StatePresenter from '../StatePresenter'
 import OverviewPresenter from './OverviewPresenter'
 import TransitionPresenter from './TransitionPresenter'
+import TimeoutPresenter from './TimeoutPresenter'
 
 class StatisticPresenter extends React.Component {
   render() {
@@ -16,6 +17,7 @@ const {
     attackPattern,
     dispatchSetOverviewTrace,
     dispatchSetOverviewTransition,
+    dispatchSetOverviewTimeout,
     dispatchHighlightTrace, 
   } = this.props
   let id,
@@ -35,6 +37,9 @@ const {
           break
         case 'TransitionView':
           presenter = <TransitionPresenter {...{model, overviewFilter, dispatchSetOverviewTransition, dispatchHighlightTrace}}/>
+          break
+        case 'TimeoutView':
+          presenter = <TimeoutPresenter {...{model, overviewFilter, dispatchSetOverviewTimeout, dispatchHighlightTrace}}/>
           break
         case 'UserView':
           presenter = (
@@ -59,6 +64,10 @@ const {
       
     }
 
+    const handleClick = (filter) => {
+      dispatchSetOverviewFilter(filter)
+    }
+
     return (
       <Container fluid>
         <Header >
@@ -70,6 +79,7 @@ const {
         <Menu tabular>
           <Menu.Item name='Trace' active={overviewFilter.showType === 'TraceView'} onClick={() => dispatchSetOverviewFilter('TraceView')} />
           <Menu.Item name='Transition' active={overviewFilter.showType === 'TransitionView'} onClick={() => dispatchSetOverviewFilter('TransitionView')} />
+          <Menu.Item name='Timeout' active={overviewFilter.showType === 'TimeoutView'} onClick={() => dispatchSetOverviewFilter('TimeoutView')} />
           <Menu.Item name='User' active={overviewFilter.showType === 'UserView'} onClick={() => dispatchSetOverviewFilter('UserView')} />
           <Menu.Item name='State' active={overviewFilter.showType === 'StateView'} onClick={() => dispatchSetOverviewFilter('StateView')} />
         </Menu>
