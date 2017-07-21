@@ -96,18 +96,20 @@ export const parseLog = (model, tuple) => {
 
   if (model.UserView[user]) {
     model.UserView[user].forEach((s) => {
+
+      // add expired moves
+      pattern[s.id].children.forEach((c) => {
+        if (isExpiredMove(s.commitTime, s.id, c)) {
+          if (!expiredMap[c] || parsedDate(expiredMap[c].commitTime).isBefore(parsedDate(s.commitTime))) {
+            expiredMap[c] = {...s}
+          }
+        }
+      })
+
       // check whether this is a expired state
       if (isExpiredState(s)) {
         // //console.log('Expired state:', s.id)
         moves.push({from: s.id, to: 's0'})
-        // add expired moves
-        pattern[s.id].children.forEach((c) => {
-          if (isExpiredMove(s.commitTime, s.id, c)) {
-            if (!expiredMap[c] || parsedDate(expiredMap[c].commitTime).isBefore(parsedDate(s.commitTime))) {
-              expiredMap[c] = {...s}
-            }
-          }
-        })
       } else {
         pattern[s.id].children.forEach((c) => {
           // can commit

@@ -88,7 +88,7 @@ const flattenMoves = (moves) => {
   return data
 }
 const scaleValue = (OldMax, OldMin, OldValue) => {
-  let NewMin = 1.5, NewMax = 4.0
+  let NewMin = 1.5, NewMax = 6.0
   let OldRange = (OldMax - OldMin) * 1.0
   if (OldRange === 0)
       return NewMin

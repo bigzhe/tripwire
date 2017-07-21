@@ -35,7 +35,7 @@ const AttackPattern = {
       children: ['s2'],
       parents: ['s0'],
       timeout: {
-        s2: 60, 
+        s2: 24*60, 
       },
       fy: 600,
       // canCommit: (user, action) => action.includes('s1'),
