@@ -198,7 +198,8 @@ router.route('/logs')
         io.emit('action', {
             type: 'USER_MOVE_TO_MULTIPLE',
             tuple,
-            moves
+            moves,
+            expired
         })
 
 

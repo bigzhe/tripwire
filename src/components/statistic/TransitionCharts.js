@@ -55,9 +55,6 @@ const TransitionCharts = ({data, overviewFilter}) => {
     const users = getUsers(data)
     const colors = randomColor({hue: 'grey', count: users.length, seed: 100});
 
-    console.log(data)
-    console.log(flatten(data))
-
     return (
       <div>
         <Header>Transition bar chart</Header>
@@ -74,7 +71,7 @@ const TransitionCharts = ({data, overviewFilter}) => {
   }
 
   const buildIndividualPieChart = (data) => {
-    
+
   }
 
   return (

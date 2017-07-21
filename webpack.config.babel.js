@@ -13,7 +13,7 @@ export default {
       {
         test: /\.js$/,
         loaders: [
-          'babel', 'react-hot-loader/webpack'
+          'babel'
         ],
         exclude: /node_modules/,
         include: __dirname

@@ -76,6 +76,45 @@ const removeAllHighlight = (links) => {
   return updatedLinks
 }
 
+const flattenMoves = (moves) => {
+  const data = {}
+  Object.entries(moves).forEach(([key, ms]) => {
+    Object.entries(ms).forEach(([m_key, times]) => {
+      data[m_key] = data[m_key] || 0
+      data[m_key] += times
+    })
+  })
+  console.log(data)
+  return data
+}
+const scaleValue = (OldMax, OldMin, OldValue) => {
+  let NewMin = 1.5, NewMax = 4.0
+  let OldRange = (OldMax - OldMin) * 1.0
+  if (OldRange === 0)
+      return NewMin
+  else {
+      const NewRange = (NewMax - NewMin)  
+      return (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+  }
+  // return NewValue
+}
+const updatedLinkConfig = (data) => {
+  const moves = flattenMoves(data)
+  let OldMax = 0, OldMin = 0
+  Object.entries(moves).forEach(([m, t]) => {
+    OldMax = OldMax > t ? OldMax : t
+    OldMin = OldMin < t ? OldMin : t
+  })
+
+  // special cases
+  const result = {}
+  Object.keys(moves).forEach(move => {
+    result[move] = result[move] || {}
+    result[move].strokeWidth = scaleValue(OldMax, OldMin, moves[move])
+  })
+  return result
+}
+
 const model = (state = 'Loading', action) => {
   switch (action.type) {
     case 'INIT_MODEL':
@@ -124,6 +163,20 @@ const model = (state = 'Loading', action) => {
     // *****************************
     // Presenting the balabala
     // *****************************
+    case 'STATISTIC_GRAPH':
+      // console.log(flattenMoves(state.Statistic.moves))
+      return {
+        ...state,
+        UserView: {},
+        StateView: {},
+        GraphConfig: {
+          ...state.GraphConfig,
+          updatedConfig: {
+            ...state.GraphConfig.updatedConfig,
+            links: updatedLinkConfig(state.Statistic.moves)
+          }
+        }
+      }
     case 'HIGHLIGHT_TRACE':
     // case 'SET_OVERVIEW_TRACE':
       // action.trace s0 s1 s2 s3 s4

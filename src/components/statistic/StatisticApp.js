@@ -64,7 +64,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch({type: 'server/disconnect'})
         dispatch({type: 'INIT_MODEL', data: response.model})
         dispatch({type: 'INIT_ATTACKPATTERN', data: response.attackPattern})
-        dispatch({type: 'REFRESH_GRAPHCONFIG'})
+        // dispatch({type: 'REFRESH_GRAPHCONFIG'})
+        dispatch({type: 'STATISTIC_GRAPH'})
       }, error => {
         console.log('fetch error')
       })

@@ -140,7 +140,6 @@ export const parseLog = (model, tuple) => {
     expired.push({from: v.id, to: k})
   })
 
-  // console.log(expired)
   return {moves, expired}
 
 }
