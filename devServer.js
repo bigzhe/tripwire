@@ -226,6 +226,14 @@ router.route('/model')
         res.send('Done')
     })
 
+router.use('/creator', express.static(path.resolve(__dirname + '/creator')))
+
+app.get('/creator', (req, res) => {
+  console.log('sent creator')
+//   io.emit('action', {type: 'message', data: 'someone linked to the server'})
+  res.sendFile(path.join(__dirname, 'creator', 'index.html'));
+});
+
 app.use('/api', router);
 
 app.get('/*', (req, res) => {

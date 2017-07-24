@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Attack Pattern Editor</title>
+  <style>
+[v-cloak] {
+  display: none;
+}
+
+svg {
+  border-width: 1px;
+  background-color: #eeeeee;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+svg:not(.active):not(.ctrl) {
+  cursor: crosshair;
+}
+
+path.link {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  cursor: default;
+}
+
+svg:not(.active):not(.ctrl) path.link {
+  cursor: pointer;
+}
+
+path.link.selected {
+  stroke-dasharray: 10,2;
+}
+
+path.link.dragline {
+  pointer-events: none;
+}
+
+path.link.hidden {
+  stroke-width: 0;
+}
+
+circle.node {
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
+circle.node.reflexive {
+  stroke: #000 !important;
+  stroke-width: 2.5px;
+}
+
+text {
+  font: 28 sans-serif;
+  pointer-events: none;
+}
+
+text.id {
+  text-anchor: middle;
+  font-weight: bold;
+}
+
+rect {
+  fill:#E91E63;
+  opacity: 0.85;
+}
+
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+  <div id='app'>
+    <div v-cloak class="ui three column doubling stackable grid container">
+      <div class="column">
+        <h3 class="ui header">Transition editor</h3>
+        <div v-if="!linkSelected">
+          <h4 class="ui header">Please select a transition</h4>
+        </div>
+        <div v-else v-cloak>
+          <form class="ui form">
+            <div class="field">
+              <label>From</label>
+              <input type="text" disabled v-model="selectedLink.source.id">
+            </div>
+            <div class="field">
+              <label>To</label>
+              <input type="text" disabled v-model="selectedLink.target.id">
+            </div>
+            <div class="field">
+              <label>Timeout (mins)</label>
+              <input type="text" v-model="selectedLink.target.timeout">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="column">
+        <h3 class="ui header">State editor</h3>
+        <div v-if="!nodeSelected">
+          <h4 class="ui header">Please select a state</h4>
+        </div>
+        <div v-else v-cloak>
+          <form class="ui form">
+            <div class="field">
+              <label>ID</label>
+              <input type="text" disabled v-model="selectedNode.id">
+            </div>
+            <div class="field">
+              <label>Label</label>
+              <input type="text" v-model="selectedNode.label" placeholder="The information of this state">
+            </div>
+  <select v-model="selectedNode.property">
+    <option disabled value="">请选择</option>
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+  </select>
+  <span>Selected: {{ selectedNode.property }}</span>
+          </form>
+        </div>
+      </div>
+      <div class="column">
+        <svg width='400' height='600'></svg>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://localhost:3000/api/creator/dist/app.js"></script>
+<!-- <script src="dist/main.js"></script> -->
+
+</html>
