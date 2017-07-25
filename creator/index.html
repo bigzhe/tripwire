@@ -101,6 +101,18 @@ rect {
               <label>Timeout (mins)</label>
               <input type="text" v-model="selectedLink.target.timeout">
             </div>
+            <div class="field">
+              <label>Trigger event</label>
+              <input type="text" v-model="selectedLink.target.trigger" placeholder="description of the trigger event">
+            </div>
+            <div class="field">
+              <label>Trigger event</label>
+              <input type="text" v-model="selectedLink.target.trigger" placeholder="description of the trigger event">
+            </div>
+            <div class="field">
+              <label>Trigger event creator</label>
+              <input type="text" v-model="selectedLink.target.canCommit">
+            </div>
           </form>
         </div>
       </div>
@@ -119,18 +131,22 @@ rect {
               <label>Label</label>
               <input type="text" v-model="selectedNode.label" placeholder="The information of this state">
             </div>
-  <select v-model="selectedNode.property">
-    <option disabled value="">请选择</option>
-    <option>A</option>
-    <option>B</option>
-    <option>C</option>
-  </select>
-  <span>Selected: {{ selectedNode.property }}</span>
+            <label>Property</label>
+            <select v-model="selectedNode.property">
+              <option>initial</option>
+              <option>normal</option>
+              <option>outcome</option>
+            </select>
           </form>
         </div>
       </div>
       <div class="column">
-        <svg width='400' height='600'></svg>
+        <div v-if="!loaded">
+          <h4 class="ui header">Loading</h4>
+        </div>
+        <div>
+          <svg width='400' height='600'></svg>
+        </div>
       </div>
     </div>
 

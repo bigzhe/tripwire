@@ -226,6 +226,12 @@ router.route('/model')
         res.send('Done')
     })
 
+router.route('/attackpattern')
+    .get((req, res) => {
+        // MODEL = storage.getItemSync('MODEL')
+        res.json(AttackPattern)
+    })
+
 router.use('/creator', express.static(path.resolve(__dirname + '/creator')))
 
 app.get('/creator', (req, res) => {

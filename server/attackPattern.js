@@ -23,6 +23,7 @@ const AttackPattern = {
           }
         },
       },
+      trigger: {},
       timeout: {
         s1: 999999999999999999999999999,
       },
@@ -34,6 +35,7 @@ const AttackPattern = {
       info: '',
       children: ['s2'],
       parents: ['s0'],
+      trigger: {},
       timeout: {
         s2: 24*60, 
       },
@@ -62,6 +64,7 @@ const AttackPattern = {
       children: ['s3', 's4'],
       parents: ['s1'],
       // timeout: 1 * 60 * 60000,
+      trigger: {},
       timeout: {
         s3: 60,
         s4: 60,
@@ -115,6 +118,7 @@ const AttackPattern = {
           }
         },
       },
+      trigger: {},
       pattern: 'pattern1',
     },
     s4: {
@@ -128,6 +132,7 @@ const AttackPattern = {
       fx: 100,
       fy: 200,
       canCommit: {},
+      trigger: {},
       pattern: 'pattern1',
     },
     // s5: {
