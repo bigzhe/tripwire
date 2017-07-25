@@ -7,7 +7,7 @@ const AttackPattern = {
       id: 's0',
       isInitial: true,
       label: 'initial state for pattern 1',
-      children: ['s1'],
+      children: ['s1', 's5'],
       parents: [],
       // fy: 800,
       // canCommit: () => true,
@@ -22,12 +22,65 @@ const AttackPattern = {
               return false
           }
         },
+        s5: (tuple) => {
+          const {user, device, activity, key_data} = tuple
+          switch (activity) {
+            case 'login':
+              return true
+              break;          
+            default:
+              return false
+          }
+        },
       },
       trigger: {},
       timeout: {
         s1: 999999999999999999999999999,
+        s5: 999999999999999999999999999,
       },
-      pattern: 'pattern1'
+      pattern: 'universe'
+    },
+    s5: {
+      id: 's5',
+      label: 'Login',
+      info: '',
+      children: ['s6'],
+      parents: ['s0'],
+      trigger: {},
+      timeout: {
+        s6: 24*60, 
+      },
+      fy: 600,
+      // canCommit: (user, action) => action.includes('s1'),
+      canCommit: {
+        s6: (tuple) => {
+          const {user, device, activity, key_data} = tuple
+          switch (activity) {
+            case 'file':
+              if (key_data.Path.startsWith("/admin"))
+                return true
+              break;          
+            default:
+              return false
+          }
+        },
+      },
+      // fy: 700,
+      pattern: 'pattern2',
+    },
+    s6: {
+      id: 's6',
+      label: 'Login',
+      info: '',
+      children: [],
+      parents: ['s5'],
+      trigger: {},
+      timeout: {},
+      fy: 600,
+      // canCommit: (user, action) => action.includes('s1'),
+      canCommit: {},
+      // fy: 700,
+      pattern: 'pattern2',
     },
     s1: {
       id: 's1',
