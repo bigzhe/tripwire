@@ -5,151 +5,241 @@
   <meta charset="utf-8">
   <title>Attack Pattern Editor</title>
   <style>
-[v-cloak] {
-  display: none;
-}
+    [v-cloak] {
+      display: none;
+    }
 
-svg {
-  border-width: 1px;
-  background-color: #eeeeee;
-  cursor: default;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
+    svg {
+      border-width: 1px;
+      background-color: #eeeeee;
+      cursor: default;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
 
-svg:not(.active):not(.ctrl) {
-  cursor: crosshair;
-}
+    svg:not(.active):not(.ctrl) {
+      cursor: crosshair;
+    }
 
-path.link {
-  fill: none;
-  stroke: #000;
-  stroke-width: 4px;
-  cursor: default;
-}
+    path.link {
+      fill: none;
+      stroke: #000;
+      stroke-width: 4px;
+      cursor: default;
+    }
 
-svg:not(.active):not(.ctrl) path.link {
-  cursor: pointer;
-}
+    svg:not(.active):not(.ctrl) path.link {
+      cursor: pointer;
+    }
 
-path.link.selected {
-  stroke-dasharray: 10,2;
-}
+    path.link.selected {
+      stroke-dasharray: 10, 2;
+    }
 
-path.link.dragline {
-  pointer-events: none;
-}
+    path.link.dragline {
+      pointer-events: none;
+    }
 
-path.link.hidden {
-  stroke-width: 0;
-}
+    path.link.hidden {
+      stroke-width: 0;
+    }
 
-circle.node {
-  stroke-width: 1.5px;
-  cursor: pointer;
-}
+    circle.node {
+      stroke-width: 1.5px;
+      cursor: pointer;
+    }
 
-circle.node.reflexive {
-  stroke: #000 !important;
-  stroke-width: 2.5px;
-}
+    circle.node.reflexive {
+      stroke: #000 !important;
+      stroke-width: 2.5px;
+    }
 
-text {
-  font: 28 sans-serif;
-  pointer-events: none;
-}
+    text {
+      font: 28 sans-serif;
+      pointer-events: none;
+    }
 
-text.id {
-  text-anchor: middle;
-  font-weight: bold;
-}
+    text.id {
+      text-anchor: middle;
+      font-weight: bold;
+    }
 
-rect {
-  fill:#E91E63;
-  opacity: 0.85;
-}
-
+    rect {
+      fill: #E91E63;
+      opacity: 0.85;
+    }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css" />
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css" /> 
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+    
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
   <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>  
 </head>
 
 <body>
   <div id='app'>
-    <div v-cloak class="ui three column doubling stackable grid container">
-      <div class="column">
-        <h3 class="ui header">Transition editor</h3>
-        <div v-if="!linkSelected">
-          <h4 class="ui header">Please select a transition</h4>
-        </div>
-        <div v-else v-cloak>
-          <form class="ui form">
-            <div class="field">
-              <label>From</label>
-              <input type="text" disabled v-model="selectedLink.source.id">
-            </div>
-            <div class="field">
-              <label>To</label>
-              <input type="text" disabled v-model="selectedLink.target.id">
-            </div>
-            <div class="field">
-              <label>Timeout (mins)</label>
-              <input type="text" v-model="selectedLink.target.timeout">
-            </div>
-            <div class="field">
-              <label>Trigger event</label>
-              <input type="text" v-model="selectedLink.target.trigger" placeholder="description of the trigger event">
-            </div>
-            <div class="field">
-              <label>Trigger event</label>
-              <input type="text" v-model="selectedLink.target.trigger" placeholder="description of the trigger event">
-            </div>
-            <div class="field">
-              <label>Trigger event creator</label>
-              <input type="text" v-model="selectedLink.target.canCommit">
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="column">
-        <h3 class="ui header">State editor</h3>
-        <div v-if="!nodeSelected">
-          <h4 class="ui header">Please select a state</h4>
-        </div>
-        <div v-else v-cloak>
-          <form class="ui form">
-            <div class="field">
-              <label>ID</label>
-              <input type="text" disabled v-model="selectedNode.id">
-            </div>
-            <div class="field">
-              <label>Label</label>
-              <input type="text" v-model="selectedNode.label" placeholder="The information of this state">
-            </div>
-            <label>Property</label>
-            <select v-model="selectedNode.property">
-              <option>initial</option>
-              <option>normal</option>
-              <option>outcome</option>
-            </select>
-          </form>
-        </div>
-      </div>
-      <div class="column">
-        <div v-if="!loaded">
-          <h4 class="ui header">Loading</h4>
-        </div>
-        <div>
-          <svg width='400' height='600'></svg>
-        </div>
-      </div>
+    <div class="ui menu">
+      <a class="active item">
+        Home
+      </a>
     </div>
+    <el-row :gutter="20">
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+          <h3>Transition editor</h3>
+          <div v-if="!linkSelected">
+            <h4>Please select a transition</h4>
+          </div>
+          <div v-else v-cloak>
+            <el-form :model="selectedLink" label-width="80px">
+              <el-form-item label="Source">
+                <el-input disabled v-model="selectedLink.source.id"></el-input>
+              </el-form-item>
+              <el-form-item label="Target">
+                <el-input disabled v-model="selectedLink.target.id"></el-input>
+              </el-form-item>
+              <el-form-item label="Timeout">
+                <el-input v-model="selectedLink.timeout">
+                  <template slot="append">mins</template>
+                </el-input>
+              </el-form-item>
 
+              <h4>Trigger event creator</h4>
+              <p>Instruction of the creator</p>
+              <el-form-item label="Username filter">
+                <el-switch on-text="" off-text="" v-model="selectedLink.trigger.username"></el-switch>
+              </el-form-item>
+              <el-form-item v-show="selectedLink.trigger.username" label=" ">
+                <el-input v-model="selectedLink.trigger.username_regex" placeholder="enter the regex of the username"></el-input>
+                <p>E.g. /^username$/ matches 'username'</p>
+              </el-form-item>
+
+
+
+
+              <el-form-item label="PC filter">
+                <el-switch on-text="" off-text="" v-model="selectedLink.trigger.pc"></el-switch>
+              </el-form-item>
+              <el-form-item v-show="selectedLink.trigger.pc" label=" ">
+                <el-input v-model="selectedLink.trigger.pc_regex" placeholder="enter the regex of the pc"></el-input>
+                <p>E.g. /^PC01$/ matches 'PC01'</p>
+              </el-form-item>
+
+
+
+
+              <el-form-item label="Time range filter">
+                <el-switch on-text="" off-text="" v-model="selectedLink.trigger.timeRange"></el-switch>
+              </el-form-item>
+              <el-form-item v-show="selectedLink.trigger.timeRange" label=" ">
+                <el-col :span="11">
+                  <el-time-picker type="fixed-time" placeholder="From" v-model="selectedLink.trigger.start_time" style="width: 100%;"></el-time-picker>
+                </el-col>
+                <el-col class="line" :span="2">-</el-col>
+                <el-col :span="11">
+                  <el-time-picker type="fixed-time" placeholder="To" v-model="selectedLink.trigger.end_time" style="width: 100%;"></el-time-picker>
+                </el-col>
+              </el-form-item>
+
+              <el-form-item label="Activity filter">
+                <el-switch on-text="" off-text="" v-model="selectedLink.trigger.activity"></el-switch>
+              </el-form-item>
+              <el-form-item v-show="selectedLink.trigger.activity" label=" ">
+                <el-input v-model="selectedLink.trigger.activity_regex" placeholder="enter the regex of the activity"></el-input>
+                <ul>
+                  <li>Alerts
+                    <ul>
+                      <li>/^File activity increased$/</li>
+                      <li>/^Email activity unsusual$/</li>
+                      <li>/^Out of hours login$/</li>
+                      <li>/^Usb drive out of hours$/</li>
+                      <li>/^High volume of files$/</li>
+                      <li>/^Big email attachement$/</li>
+                      <li>/^Multiple logins$/</li>
+                      <li>/^Banned website access$/</li>
+                    </ul>
+                  </li>
+
+                  <li>/^login$/</li>
+                  <li>/^logoff$/</li>
+                  <li>/^usb inserted$/</li>
+                  <li>/^usb removed$/</li>
+                  <li>/^http://bannedwebsite.com$/</li>
+                  <li>/^bannedemail@company.com$/</li>
+                  <li>/^\/admin/</li>
+                </ul>
+              </el-form-item>
+
+              <el-form-item label="Colour filter">
+                <el-switch on-text="" off-text="" v-model="selectedLink.trigger.color"></el-switch>
+              </el-form-item>
+              <el-form-item v-show="selectedLink.trigger.color" label=" ">
+                <el-radio class="radio" v-model="selectedLink.trigger.color_regex" label="green">Green</el-radio>
+                <el-radio class="radio" v-model="selectedLink.trigger.color_regex" label="orange">Orange</el-radio>
+                <el-radio class="radio" v-model="selectedLink.trigger.color_regex" label="red">Red</el-radio>
+              </el-form-item>
+
+            </el-form>
+
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple-light">
+          <h3 class="ui header">State editor</h3>
+          <div v-if="!nodeSelected">
+            <h4 class="ui header">Please select a state</h4>
+          </div>
+          <div v-else v-cloak>
+            <el-form>
+              <el-form-item label="State ID">
+                <el-input disabled v-model="selectedNode.id"></el-input>
+              </el-form-item>
+              <el-form-item label="Label">
+                <el-input v-model="selectedNode.label" placeholder="enter the description of this state"></el-input>
+              </el-form-item>
+              <el-form-item label="Property">
+                <el-radio class="radio" v-model="selectedNode.property" label="normal">Normal</el-radio>
+                <el-radio class="radio" v-model="selectedNode.property" label="outcome">Outcome</el-radio>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+          <h3 class="ui header">Attack pattern</h3>
+       Edit: 
+<select class="ui dropdown">
+  <option value="">Gender</option>
+  <option value="1">Male</option>
+  <option value="0">Female</option>
+</select>
+
+<br>
+or  <el-button type="text">Create a new pattern</el-button>
+
+
+<br /><br />
+
+          <div v-if="!loaded">
+            <h4 class="ui header">Loading</h4>
+          </div>
+          <div>
+            <svg width='400' height='600'></svg>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    {{selectedLink}}
   </div>
 
 </body>

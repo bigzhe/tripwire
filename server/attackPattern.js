@@ -1,6 +1,6 @@
 const AttackPattern = {
   info: {
-    patterns: ['1','2','3']
+    patterns: ['pattern1']
   },
   states: {
     s0: {
