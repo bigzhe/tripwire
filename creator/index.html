@@ -81,6 +81,7 @@
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 </head>
 
 <body>
@@ -119,7 +120,7 @@
                 </el-form-item>
                 <el-form-item v-show="selectedLink.trigger.username" label=" ">
                   <el-input v-model="selectedLink.trigger.username_regex" placeholder="enter the regex of the username"></el-input>
-                  <p>E.g. /^username$/ matches 'username'</p>
+                  <p>E.g. ^username$ matches 'username'</p>
                 </el-form-item>
 
 
@@ -130,7 +131,7 @@
                 </el-form-item>
                 <el-form-item v-show="selectedLink.trigger.pc" label=" ">
                   <el-input v-model="selectedLink.trigger.pc_regex" placeholder="enter the regex of the pc"></el-input>
-                  <p>E.g. /^PC01$/ matches 'PC01'</p>
+                  <p>E.g. ^PC01$ matches 'PC01'</p>
                 </el-form-item>
 
 
@@ -157,24 +158,24 @@
                   <ul>
                     <li>Alerts
                       <ul>
-                        <li>/^File activity increased$/</li>
-                        <li>/^Email activity unsusual$/</li>
-                        <li>/^Out of hours login$/</li>
-                        <li>/^Usb drive out of hours$/</li>
-                        <li>/^High volume of files$/</li>
-                        <li>/^Big email attachement$/</li>
-                        <li>/^Multiple logins$/</li>
-                        <li>/^Banned website access$/</li>
+                        <li>^File activity increased$</li>
+                        <li>^Email activity unsusual$</li>
+                        <li>^Out of hours login$</li>
+                        <li>^Usb drive out of hours$</li>
+                        <li>^High volume of files$</li>
+                        <li>^Big email attachement$</li>
+                        <li>^Multiple logins$</li>
+                        <li>^Banned website access$</li>
                       </ul>
                     </li>
 
-                    <li>/^login$/</li>
-                    <li>/^logoff$/</li>
-                    <li>/^usb inserted$/</li>
-                    <li>/^usb removed$/</li>
-                    <li>/^http://bannedwebsite.com$/</li>
-                    <li>/^bannedemail@company.com$/</li>
-                    <li>/^\/admin/</li>
+                    <li>^login$</li>
+                    <li>^logoff$</li>
+                    <li>^usb inserted$</li>
+                    <li>^usb removed$</li>
+                    <li>^http://bannedwebsite.com$</li>
+                    <li>^bannedemail@company.com$</li>
+                    <li>^\/admin</li>
                   </ul>
                 </el-form-item>
 
