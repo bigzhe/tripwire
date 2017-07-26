@@ -3,8 +3,8 @@ var csv = require("fast-csv");
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 
-import AttackPattern from './server/attackPattern.js'
-import { zipMODEL, unzipMODEL, modelReducer, parseLog } from './server/util.js'
+import AttackPattern from './attackPattern.js'
+import { zipMODEL, unzipMODEL, modelReducer, parseLog } from './util.js'
 
 var storage = require('node-persist');
 

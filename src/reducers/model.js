@@ -1,5 +1,5 @@
-import AttackPattern from '../../server/attackPattern'
-import {modelReducer} from '../../server/util'
+// import AttackPattern from '../../server/attackPattern'
+import {modelReducer} from '../../util'
 
 const GraphConfig = {
     width: 500,

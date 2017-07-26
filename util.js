@@ -1,7 +1,5 @@
-import AttackPattern from './attackPattern'
-
-var moment = require('moment');
-moment().format();
+// import AttackPattern from './attackPattern'
+import AttackPattern from './server/attackPattern.json'
 
 export const canCommitGenerator = (trigger) => {
   return ({user, device, date, activity, color}) => {
@@ -44,6 +42,28 @@ export const canCommitGenerator = (trigger) => {
     return true
   }
 }
+Object.keys(AttackPattern.states).forEach(s => {
+  AttackPattern.states[s].children.forEach(child => {
+    AttackPattern.states[s].canCommit[child] = canCommitGenerator(AttackPattern.states[s].trigger[child])
+  })
+})
+
+console.log('--------ATTACKPATTERN----------------------------');
+console.log(AttackPattern);
+console.log('------------------------------------');
+
+var moment = require('moment');
+moment().format();
+
+const test_data = {
+  user: 'haha',
+  device: 'pc03',
+  date: '01/01/2013  08:33:23',
+  activity: 'File activity increased',
+  color: 'Red'
+}
+console.log(AttackPattern.states.s0.canCommit.s1(test_data))
+
 
 
 // export const unzipAttackPattern = (AttackPattern) => {
@@ -113,9 +133,10 @@ export const parseLog = (model, tuple) => {
   // let user = id
   let moves = [], expired = []
   // {id, pc, action, date}
-  const {user, device, activity, key_data} = tuple
+  const {user, device, activity, date} = tuple
 
-  const now = key_data.Date
+  // const now = key_data.Date
+  const now = date
 
   // the user should always be at s0, so
   if (!model.UserView[user] || model.UserView[user].findIndex(elem => elem.id === 's0') === -1) {
@@ -302,8 +323,10 @@ export const modelReducer = (state, action) => {
       // ]
       // //console.log(action)
 
-      const {user, device, activity, key_data} = action.tuple
-      const now = key_data.Date
+      // const {user, device, activity, key_data} = action.tuple
+      const {user, device, activity, date} = action.tuple
+      // const now = key_data.Date
+      const now = date
       const moves = action.moves
       const expired = action.expired
 

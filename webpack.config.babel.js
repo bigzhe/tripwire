@@ -8,8 +8,15 @@ export default {
     filename: 'bundle.js',
     publicPath: '/static/'
   },
+node: {
+  fs: "empty"
+},
   module : {
     loaders: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
       {
         test: /\.js$/,
         loaders: [

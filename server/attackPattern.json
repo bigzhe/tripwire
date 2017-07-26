@@ -1,1 +1,54 @@
-{"info":{"patterns":["pattern1"]},"states":{"s0":{"id":"s0","isInitial":true,"label":"initial state","children":["s1"],"parents":[],"canCommit":{},"trigger":{"s1":{"username":false,"username_regex":"","pc":false,"pc_regex":"","activity":true,"activity_regex":"^File activity increased$","color":false,"color_regex":"green","timeRange":false,"start_time":"","end_time":""}},"timeout":{"s1":60},"pattern":"universe","fx":181.83629503273758,"fy":554.3272948615348},"s1":{"id":"s1","label":"","pattern":"pattern1","children":["s2"],"parents":["s0"],"canCommit":{},"timeout":{"s2":60},"trigger":{"s2":{"username":true,"username_regex":"ooo","pc":true,"pc_regex":"oooo","activity":false,"activity_regex":"","color":false,"color_regex":"green","timeRange":false,"start_time":"","end_time":""}},"fx":139.52086194424822,"fy":343.01667753262154},"s2":{"id":"s2","label":"","pattern":"pattern1","children":[],"parents":["s1"],"canCommit":{},"timeout":{},"trigger":{},"fx":135.57589951064406,"fy":107.80320364396545}}}
+{
+  "info": {
+    "patterns": [
+      "pattern1"
+    ]
+  },
+  "states": {
+    "s0": {
+      "id": "s0",
+      "isInitial": true,
+      "label": "initial state",
+      "children": [
+        "s1"
+      ],
+      "parents": [],
+      "canCommit": {},
+      "trigger": {
+        "s1": {
+          "username": true,
+          "username_regex": "^haha$",
+          "pc": false,
+          "pc_regex": "",
+          "activity": false,
+          "activity_regex": "",
+          "color": false,
+          "color_regex": "green",
+          "timeRange": false,
+          "start_time": "",
+          "end_time": ""
+        }
+      },
+      "timeout": {
+        "s1": 60
+      },
+      "pattern": "universe",
+      "fx": 179.85126172844514,
+      "fy": 474.80351084839447
+    },
+    "s1": {
+      "id": "s1",
+      "label": "",
+      "pattern": "pattern1",
+      "children": [],
+      "parents": [
+        "s0"
+      ],
+      "canCommit": {},
+      "timeout": {},
+      "trigger": {},
+      "fx": 170.8603015833078,
+      "fy": 192.27720591036535
+    }
+  }
+}

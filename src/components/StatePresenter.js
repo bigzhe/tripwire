@@ -1,7 +1,7 @@
 import React from 'react'
 import {Container, Button, Header, List, Divider} from 'semantic-ui-react'
 
-import {traceBack} from '../../server/util'
+import {traceBack} from '../../util'
 
 const StatePresenter = ({id, users, patterns, Track}) => {
   // console.log(pattern)
