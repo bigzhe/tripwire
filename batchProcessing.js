@@ -107,17 +107,17 @@ const tripwireParse = (log) => {
 
 let i = 0
 csv
-  .fromPath("test_cases/data.csv")
+  .fromPath("test_cases/data2.csv")
   .on("data", function (t) {
     // tuples.push(tuple)
     const data = {
       user: t[0],
       date: t[1],
       device: t[2],
-      content: t[3]
+      activity: t[3]
     }
 
-    const tuple = tripwireParse(data)
+    const tuple = data
     // console.log(tuple)
     // console.log(i++)
 

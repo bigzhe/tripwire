@@ -17,11 +17,11 @@
       "trigger": {
         "s1": {
           "username": true,
-          "username_regex": "^haha$",
+          "username_regex": "awood1963",
           "pc": false,
           "pc_regex": "",
-          "activity": false,
-          "activity_regex": "",
+          "activity": true,
+          "activity_regex": "login",
           "color": false,
           "color_regex": "green",
           "timeRange": false,
@@ -30,7 +30,7 @@
         }
       },
       "timeout": {
-        "s1": 60
+        "s1": 9999999999999
       },
       "pattern": "universe",
       "fx": 179.85126172844514,
@@ -47,6 +47,7 @@
       "canCommit": {},
       "timeout": {},
       "trigger": {},
+      "isOutcome": true,
       "fx": 170.8603015833078,
       "fy": 192.27720591036535
     }

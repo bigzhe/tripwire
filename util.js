@@ -16,7 +16,7 @@ export const canCommitGenerator = (trigger) => {
 
     if (trigger.activity) {
       const re = new RegExp(trigger.activity_regex)
-      if (re.exec(device) === null) return false
+      if (re.exec(activity) === null) return false
     }
 
     if (trigger.color) {
@@ -56,10 +56,10 @@ var moment = require('moment');
 moment().format();
 
 const test_data = {
-  user: 'haha',
+  user: 'awood1963',
   device: 'pc03',
   date: '01/01/2013  08:33:23',
-  activity: 'File activity increased',
+  activity: 'login',
   color: 'Red'
 }
 console.log(AttackPattern.states.s0.canCommit.s1(test_data))
