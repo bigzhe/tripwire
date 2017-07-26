@@ -217,7 +217,7 @@
         </el-col>
         <el-col :span="8">
           <div class="grid-content bg-purple">
-            <h3 class="ui header">Attack pattern {{targetPattern}}</h3>
+            <h3 class="ui header">Attack pattern {{targetPattern}} <div v-if="newPattern">New pattern: {{newPattern}}</div></h3>
             Edit pattern: 
             <!-- <select class="ui dropdown">
               <option>--select a pattern--</option>

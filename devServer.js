@@ -5,7 +5,8 @@ import config from './webpack.config.babel';
 import express from 'express';
 
 import { TARGET_URL } from './server/config.js'
-import AttackPattern from './server/attackPattern.js'
+// import AttackPattern from './server/attackPattern.js'
+import {RAWAttackPattern, AttackPattern} from './attackPattern.js'
 import { zipMODEL, unzipMODEL, modelReducer, parseLog } from './server/util.js'
 
 var socket_io = require('socket.io');
@@ -15,6 +16,9 @@ var storage = require('node-persist');
 storage.initSync({
     dir: 'server/persist'
 });
+
+var jsonfile = require('jsonfile')
+var file = 'server/attackPattern.json'
 
 
 var bodyParser = require('body-parser')
@@ -67,9 +71,9 @@ app.use(webpackDevMiddleware(compiler, {
 let MODEL = storage.getItemSync('MODEL')
 // transfer the model to the form
 MODEL = unzipMODEL(MODEL)
-console.log('-------unzipped MODEL---------------');
-console.log(MODEL);
-console.log('------------------------------------');
+// console.log('-------unzipped MODEL---------------');
+// console.log(MODEL);
+// console.log('------------------------------------');
 
 // router
 var router = express.Router();
@@ -229,7 +233,25 @@ router.route('/model')
 router.route('/attackpattern')
     .get((req, res) => {
         // MODEL = storage.getItemSync('MODEL')
+        // storage.getItemSync('ATTACKPATTERN')
+        // res.json(storage.getItemSync('ATTACKPATTERN'))
+        console.log(AttackPattern)
+        console.log(AttackPattern.states['s0'].trigger['s1'])
         res.json(AttackPattern)
+    })
+    .post((req, res) => {
+        // const p = JSON.parse(req.body)
+        console.log(req.body.AttackPattern)
+        // console.log(p)
+        console.log(req.body.AttackPattern.states['s0'].trigger['s1'])
+        // storage.setItemSync('ATTACKPATTERN', req.body.AttackPattern)
+        jsonfile.writeFileSync(file, req.body.AttackPattern)
+        res.send('Done')
+    })
+    .delete((req, res) => {
+        storage.removeItemSync('ATTACKPATTERN')
+        jsonfile.writeFileSync(file, {})
+        res.send('Done')
     })
 
 router.use('/creator', express.static(path.resolve(__dirname + '/creator')))

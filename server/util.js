@@ -3,6 +3,54 @@ import AttackPattern from './attackPattern'
 var moment = require('moment');
 moment().format();
 
+export const canCommitGenerator = (trigger) => {
+  return ({user, device, date, activity, color}) => {
+
+    if (trigger.username) {
+      const re = new RegExp(trigger.username_regex)
+      if (re.exec(user) === null) return false
+    }
+
+    if (trigger.pc) {
+      const re = new RegExp(trigger.pc_regex)
+      if (re.exec(device) === null) return false
+    }
+
+    if (trigger.activity) {
+      const re = new RegExp(trigger.activity_regex)
+      if (re.exec(device) === null) return false
+    }
+
+    if (trigger.color) {
+      if (color.toLowerCase() !== trigger.color_regex.toLowerCase())
+        return false
+    }
+
+    if (trigger.timeRange) {
+      const from = moment(trigger.start_time)
+      const to = moment(trigger.end_time)
+      const time = moment(date)
+
+      from.set('year', time.get('year'))
+      from.set('month', time.get('month'))
+      from.set('date', time.get('date'))
+      to.set('year', time.get('year'))
+      to.set('month', time.get('month'))
+      to.set('date', time.get('date'))
+
+      if (!time.isBetween(from, to)) return false
+    }
+
+    return true
+  }
+}
+
+
+// export const unzipAttackPattern = (AttackPattern) => {
+
+// }
+
+
 export const unzipMODEL = (MODEL) => {
   MODEL = MODEL || {}
   const Model = MODEL.Model || []
