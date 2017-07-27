@@ -1,12 +1,8 @@
 {
   "info": {
     "patterns": [
-      "pattern1",
       "pattern2",
-      "pattern3",
-      "pattern4",
-      "pattern5",
-      "pattern6"
+      "pattern3"
     ]
   },
   "states": {
@@ -15,42 +11,13 @@
       "isInitial": true,
       "label": "initial state",
       "children": [
-        "s1",
         "s2",
-        "s3",
-        "s4",
-        "s5"
+        "s4"
       ],
       "parents": [],
       "canCommit": {},
       "trigger": {
-        "s1": {
-          "username": false,
-          "username_regex": "",
-          "pc": false,
-          "pc_regex": "",
-          "activity": false,
-          "activity_regex": "",
-          "color": false,
-          "color_regex": "green",
-          "timeRange": false,
-          "start_time": "",
-          "end_time": ""
-        },
         "s2": {
-          "username": false,
-          "username_regex": "",
-          "pc": false,
-          "pc_regex": "",
-          "activity": false,
-          "activity_regex": "",
-          "color": false,
-          "color_regex": "green",
-          "timeRange": false,
-          "start_time": "",
-          "end_time": ""
-        },
-        "s3": {
           "username": false,
           "username_regex": "",
           "pc": false,
@@ -75,8 +42,32 @@
           "timeRange": false,
           "start_time": "",
           "end_time": ""
-        },
-        "s5": {
+        }
+      },
+      "timeout": {
+        "s2": 60,
+        "s4": 60
+      },
+      "pattern": "universe",
+      "fx": 236.2739285006135,
+      "fy": 368.12746943747817
+    },
+    "s2": {
+      "id": "s2",
+      "label": "",
+      "pattern": "pattern2",
+      "children": [
+        "s3"
+      ],
+      "parents": [
+        "s0"
+      ],
+      "canCommit": {},
+      "timeout": {
+        "s3": 60
+      },
+      "trigger": {
+        "s3": {
           "username": false,
           "username_regex": "",
           "pc": false,
@@ -90,48 +81,16 @@
           "end_time": ""
         }
       },
-      "timeout": {
-        "s1": 60,
-        "s2": 60,
-        "s3": 60,
-        "s4": 60,
-        "s5": 60
-      },
-      "pattern": "universe",
-      "fx": 233.2515516796285,
-      "fy": 363.4996031852887
-    },
-    "s1": {
-      "id": "s1",
-      "label": "",
-      "pattern": "pattern1",
-      "children": [],
-      "parents": [
-        "s0"
-      ],
-      "canCommit": {},
-      "timeout": {},
-      "trigger": {}
-    },
-    "s2": {
-      "id": "s2",
-      "label": "",
-      "pattern": "pattern2",
-      "children": [],
-      "parents": [
-        "s0"
-      ],
-      "canCommit": {},
-      "timeout": {},
-      "trigger": {}
+      "fx": 99.99288070732743,
+      "fy": 305.0853351873799
     },
     "s3": {
       "id": "s3",
       "label": "",
-      "pattern": "pattern3",
+      "pattern": "pattern2",
       "children": [],
       "parents": [
-        "s0"
+        "s2"
       ],
       "canCommit": {},
       "timeout": {},
@@ -140,19 +99,7 @@
     "s4": {
       "id": "s4",
       "label": "",
-      "pattern": "pattern5",
-      "children": [],
-      "parents": [
-        "s0"
-      ],
-      "canCommit": {},
-      "timeout": {},
-      "trigger": {}
-    },
-    "s5": {
-      "id": "s5",
-      "label": "",
-      "pattern": "pattern6",
+      "pattern": "pattern3",
       "children": [],
       "parents": [
         "s0"

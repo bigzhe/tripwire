@@ -257,6 +257,10 @@
               <i v-if="!updating" class="el-icon-upload el-icon--right"></i>
                <i v-else class="el-icon-loading el-icon--right"></i> 
             </el-button>
+              <el-button v-if="targetPattern !== 'creator'" :disabled="updating" type="danger" v-on:click="deletePattern">{{'Delete ' + targetPattern}}
+              <i v-if="!updating" class="el-icon-upload el-icon--right"></i>
+               <i v-else class="el-icon-loading el-icon--right"></i> 
+            </el-button>  
           </div>
         </el-col>
       </el-row>
