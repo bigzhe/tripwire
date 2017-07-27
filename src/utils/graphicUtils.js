@@ -31,6 +31,7 @@ export const filterPattern = (pattern, target) => {
     if (value.pattern === target)
       result[key] = value
   })
-  // result['s0'] = pattern.s0
+  result['s0'] = {...pattern.s0}
+  result['s0'].children = result['s0'].children.filter(child => pattern[child].pattern === target)
   return result
 }
