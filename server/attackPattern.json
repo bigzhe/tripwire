@@ -2,7 +2,11 @@
   "info": {
     "patterns": [
       "pattern1",
-      "pattern2"
+      "pattern2",
+      "pattern3",
+      "pattern4",
+      "pattern5",
+      "pattern6"
     ]
   },
   "states": {
@@ -12,18 +16,21 @@
       "label": "initial state",
       "children": [
         "s1",
-        "s2"
+        "s2",
+        "s3",
+        "s4",
+        "s5"
       ],
       "parents": [],
       "canCommit": {},
       "trigger": {
         "s1": {
-          "username": true,
-          "username_regex": "awood1963",
+          "username": false,
+          "username_regex": "",
           "pc": false,
           "pc_regex": "",
-          "activity": true,
-          "activity_regex": "login",
+          "activity": false,
+          "activity_regex": "",
           "color": false,
           "color_regex": "green",
           "timeRange": false,
@@ -39,18 +46,60 @@
           "activity_regex": "",
           "color": false,
           "color_regex": "green",
-          "timeRange": true,
-          "start_time": "2017-07-27T01:22:28.322Z",
-          "end_time": "2017-07-27T22:22:29.846Z"
+          "timeRange": false,
+          "start_time": "",
+          "end_time": ""
+        },
+        "s3": {
+          "username": false,
+          "username_regex": "",
+          "pc": false,
+          "pc_regex": "",
+          "activity": false,
+          "activity_regex": "",
+          "color": false,
+          "color_regex": "green",
+          "timeRange": false,
+          "start_time": "",
+          "end_time": ""
+        },
+        "s4": {
+          "username": false,
+          "username_regex": "",
+          "pc": false,
+          "pc_regex": "",
+          "activity": false,
+          "activity_regex": "",
+          "color": false,
+          "color_regex": "green",
+          "timeRange": false,
+          "start_time": "",
+          "end_time": ""
+        },
+        "s5": {
+          "username": false,
+          "username_regex": "",
+          "pc": false,
+          "pc_regex": "",
+          "activity": false,
+          "activity_regex": "",
+          "color": false,
+          "color_regex": "green",
+          "timeRange": false,
+          "start_time": "",
+          "end_time": ""
         }
       },
       "timeout": {
-        "s1": 9999999999999,
-        "s2": 60
+        "s1": 60,
+        "s2": 60,
+        "s3": 60,
+        "s4": 60,
+        "s5": 60
       },
       "pattern": "universe",
-      "fx": 179.85126172844514,
-      "fy": 474.80351084839447
+      "fx": 233.2515516796285,
+      "fy": 363.4996031852887
     },
     "s1": {
       "id": "s1",
@@ -62,57 +111,55 @@
       ],
       "canCommit": {},
       "timeout": {},
-      "trigger": {},
-      "isOutcome": true,
-      "fx": 170.8603015833078,
-      "fy": 192.27720591036535
+      "trigger": {}
     },
     "s2": {
       "id": "s2",
       "label": "",
       "pattern": "pattern2",
-      "children": [
-        "s3"
-      ],
+      "children": [],
       "parents": [
         "s0"
       ],
       "canCommit": {},
-      "timeout": {
-        "s3": 60
-      },
-      "trigger": {
-        "s3": {
-          "username": false,
-          "username_regex": "",
-          "pc": false,
-          "pc_regex": "",
-          "activity": true,
-          "activity_regex": "^login$",
-          "color": false,
-          "color_regex": "green",
-          "timeRange": false,
-          "start_time": "",
-          "end_time": ""
-        }
-      },
-      "fx": 166.58853806000437,
-      "fy": 274.24735182350236
+      "timeout": {},
+      "trigger": {}
     },
     "s3": {
       "id": "s3",
       "label": "",
-      "pattern": "pattern2",
+      "pattern": "pattern3",
       "children": [],
       "parents": [
-        "s2"
+        "s0"
       ],
       "canCommit": {},
       "timeout": {},
-      "trigger": {},
-      "isOutcome": true,
-      "fx": 176.74447696212172,
-      "fy": 72.03722659003733
+      "trigger": {}
+    },
+    "s4": {
+      "id": "s4",
+      "label": "",
+      "pattern": "pattern5",
+      "children": [],
+      "parents": [
+        "s0"
+      ],
+      "canCommit": {},
+      "timeout": {},
+      "trigger": {}
+    },
+    "s5": {
+      "id": "s5",
+      "label": "",
+      "pattern": "pattern6",
+      "children": [],
+      "parents": [
+        "s0"
+      ],
+      "canCommit": {},
+      "timeout": {},
+      "trigger": {}
     }
   }
 }

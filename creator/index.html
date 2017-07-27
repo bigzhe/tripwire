@@ -253,7 +253,10 @@
             </div>
             <p>Instruction of using the graph</p>
 
-            <el-button type="primary" v-on:click="upload">Update<i class="el-icon-upload el-icon--right"></i></el-button>
+            <el-button :disabled="updating" type="primary" v-on:click="upload">{{newPattern ? 'Create ' + newPattern : 'Update'}}
+              <i v-if="!updating" class="el-icon-upload el-icon--right"></i>
+               <i v-else class="el-icon-loading el-icon--right"></i> 
+            </el-button>
           </div>
         </el-col>
       </el-row>

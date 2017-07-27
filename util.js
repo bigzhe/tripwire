@@ -1,6 +1,26 @@
 // import AttackPattern from './attackPattern'
 import AttackPattern from './server/attackPattern.json'
 
+const initAttackPattern = () => {
+  if (!Object.keys(AttackPattern).length) {
+    AttackPattern.info = {}
+    AttackPattern.info.patterns = []
+    AttackPattern.states = {}
+    AttackPattern.states.s0 = {
+          id: 's0',
+          isInitial: true,
+          label: 'initial state',
+          children: [],
+          parents: [],
+          canCommit: {},
+          trigger: {},
+          timeout: {},
+          pattern: 'universe'
+        }
+  }
+}
+
+
 export const canCommitGenerator = (trigger) => {
   return ({user, device, date, activity, color}) => {
 
@@ -42,6 +62,8 @@ export const canCommitGenerator = (trigger) => {
     return true
   }
 }
+
+initAttackPattern()
 Object.keys(AttackPattern.states).forEach(s => {
   AttackPattern.states[s].children.forEach(child => {
     AttackPattern.states[s].canCommit[child] = canCommitGenerator(AttackPattern.states[s].trigger[child])
@@ -62,7 +84,7 @@ const test_data = {
   activity: 'login',
   color: 'Red'
 }
-console.log(AttackPattern.states.s0.canCommit.s1(test_data))
+// console.log(AttackPattern.states.s0.canCommit.s1(test_data))
 
 
 

@@ -236,7 +236,7 @@ router.route('/attackpattern')
     })
     .post((req, res) => {
         jsonfile.writeFileSync(file, req.body.AttackPattern, {spaces: 2})
-        res.send('Done')
+        res.status(200).send('Done')
     })
     .delete((req, res) => {
         jsonfile.writeFileSync(file, {})
