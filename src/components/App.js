@@ -7,12 +7,19 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import {Grid, Image, Container, Menu, Divider} from 'semantic-ui-react'
 
+import { setVisibilityFilter } from '../actions'
+
 import * as api from '../api'
 
 class AppComponent extends Component {
   componentWillMount () {
-    const { fetchModel } = this.props
+    const { fetchModel, dispatchSetVisibilityFilter } = this.props
     console.log('will mount')
+    console.log(this.props.history)
+    // console.log(this.props.match.params.targetPattern)
+    const targetPattern = this.props.match.params.targetPattern || 'pattern1'
+    // console.log(targetPattern)
+    dispatchSetVisibilityFilter(targetPattern)
     fetchModel()
   }
 
@@ -38,7 +45,9 @@ class AppComponent extends Component {
                 </Grid.Row>
               </Grid.Column>
               <Grid.Column>
-                <LiveGraphContainer/>
+                <LiveGraphContainer 
+                  history={this.props.history}
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -65,6 +74,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         console.log('fetch error')
       }
     )
+  },
+  dispatchSetVisibilityFilter: (pattern) => {
+    dispatch(setVisibilityFilter(pattern))
   },
 })
 

@@ -14,11 +14,12 @@ import * as api from '../api'
 import LiveGraph from '../components/LiveGraph'
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     model: state.model, attackPattern: state.attackPattern,
-    visibilityFilter: state.visibilityFilter
+    visibilityFilter: state.visibilityFilter,
     // graphConfig: state.graphConfig
+    history: ownProps.history,
   }
 }
 

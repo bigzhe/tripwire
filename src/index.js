@@ -37,9 +37,9 @@ render (
     <BrowserRouter>
       <MuiThemeProvider >
       <div>
-        <Route exact path="/" component={App} />
         <Route exact path="/post" component={PostTool} />
         <Route exact path="/statistic" component={StatisticApp} />
+        <Route path="/:targetPattern" component={App} />       
         {/*<Route path="/liveboard" component={LiveboardContainer} />*/}
       </div>
       </MuiThemeProvider>

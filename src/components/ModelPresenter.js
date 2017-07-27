@@ -10,11 +10,6 @@ const ModelPresenter = ({model, presentFilter, dispatchSetPresentFilter, attackP
     users = model.StateView[presentFilter.id]
   }
     
-  
-  console.log('------------------------------------');
-  if (id)
-    console.log(attackPattern.states[id]);
-  console.log('------------------------------------');
   return (
     <Container>
       <Header >

@@ -3,6 +3,8 @@ import {Graph} from '../../node_modules/react-d3-graph'
 import {severalHoursLater} from '../utils/dateUtils'
 import {patternToGraphData, filterPattern} from '../utils/graphicUtils'
 
+import { Redirect } from 'react-router-dom'
+
 import { Button, Header, Dropdown, Form } from 'semantic-ui-react'
 
 class LiveGraph extends Component {
@@ -14,6 +16,7 @@ class LiveGraph extends Component {
       attackPattern,
       visibilityFilter,
       // graphConfig,
+      history,
       dispatchRefreshGraphConfig,
       dispatchChangeColor,
       dispatchChangeSymbolType,
@@ -30,13 +33,16 @@ class LiveGraph extends Component {
       dispatchSetPresentFilter('StateView', nodeId)
     };
 
-    const patternData = [1,2,3].map((k) => {
-      return {
-        key: 'pattern' + k,
-        value: 'pattern'+k,
-        text: 'pattern ' + k
-      }
-    })
+    const patternData = []
+    if (attackPattern !== 'Loading') {
+      attackPattern.info.patterns.forEach(p => {
+        patternData.push({
+          key: p,
+          value: p,
+          text: p
+        })
+      })
+    }
     
     return (
       <div>
@@ -55,9 +61,11 @@ class LiveGraph extends Component {
               options={patternData}
               value={visibilityFilter}
               onChange={(e, p) => {
+                history.push(p.value)
+                history.go(p.value)
                 console.log(p.value)
-                dispatchSetVisibilityFilter(p.value)
-            }}/>
+                console.log(history)
+              }}/>
         </Form.Field>
         <br/>
         <div style={{
@@ -65,18 +73,14 @@ class LiveGraph extends Component {
         }}>
         { 
           (model !== 'Loading' && attackPattern !== 'Loading') ?
-          
-            patternData.map((p) => 
-              <div key={p.key} hidden={visibilityFilter !== p.key}>
                 <Graph
-                  id={'live-graph'+p.key}
-                  data={patternToGraphData(filterPattern(attackPattern.states, p.key))}
+                  id='live-graph'
+                  data={patternToGraphData(filterPattern(attackPattern.states, visibilityFilter))}
                   config={model.GraphConfig}
                   onClickNode={onClickNode}
                   onScrollPassive={this.onScrollPassive}
                 />
-              </div>
-            )
+
           :
           <Header>Loading</Header>
         }

@@ -1,7 +1,8 @@
 {
   "info": {
     "patterns": [
-      "pattern1"
+      "pattern1",
+      "pattern2"
     ]
   },
   "states": {
@@ -10,7 +11,8 @@
       "isInitial": true,
       "label": "initial state",
       "children": [
-        "s1"
+        "s1",
+        "s2"
       ],
       "parents": [],
       "canCommit": {},
@@ -27,10 +29,24 @@
           "timeRange": false,
           "start_time": "",
           "end_time": ""
+        },
+        "s2": {
+          "username": false,
+          "username_regex": "",
+          "pc": false,
+          "pc_regex": "",
+          "activity": false,
+          "activity_regex": "",
+          "color": false,
+          "color_regex": "green",
+          "timeRange": true,
+          "start_time": "2017-07-27T01:22:28.322Z",
+          "end_time": "2017-07-27T22:22:29.846Z"
         }
       },
       "timeout": {
-        "s1": 9999999999999
+        "s1": 9999999999999,
+        "s2": 60
       },
       "pattern": "universe",
       "fx": 179.85126172844514,
@@ -50,6 +66,53 @@
       "isOutcome": true,
       "fx": 170.8603015833078,
       "fy": 192.27720591036535
+    },
+    "s2": {
+      "id": "s2",
+      "label": "",
+      "pattern": "pattern2",
+      "children": [
+        "s3"
+      ],
+      "parents": [
+        "s0"
+      ],
+      "canCommit": {},
+      "timeout": {
+        "s3": 60
+      },
+      "trigger": {
+        "s3": {
+          "username": false,
+          "username_regex": "",
+          "pc": false,
+          "pc_regex": "",
+          "activity": true,
+          "activity_regex": "^login$",
+          "color": false,
+          "color_regex": "green",
+          "timeRange": false,
+          "start_time": "",
+          "end_time": ""
+        }
+      },
+      "fx": 166.58853806000437,
+      "fy": 274.24735182350236
+    },
+    "s3": {
+      "id": "s3",
+      "label": "",
+      "pattern": "pattern2",
+      "children": [],
+      "parents": [
+        "s2"
+      ],
+      "canCommit": {},
+      "timeout": {},
+      "trigger": {},
+      "isOutcome": true,
+      "fx": 176.74447696212172,
+      "fy": 72.03722659003733
     }
   }
 }
