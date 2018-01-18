@@ -383,14 +383,16 @@ var Graph = function (_React$Component) {
                 height: this.state.config.height,
                 width: this.state.config.width
             };
-            var markerStyle = {
-                id: 'arrow',
-                markerWidth: 6,
-                markerHeight: 6,
-                viewBox: "0 0 10 10",
-                refX: 1,
-                refY: 5,
-                orient: 'auto'
+            function markerStyleGenerater(color) {
+                return {
+                    id: 'arrow-' + color,
+                    markerWidth: 6,
+                    markerHeight: 6,
+                    viewBox: "0 0 10 10",
+                    refX: 1,
+                    refY: 5,
+                    orient: 'auto'
+                }
             }
             return _react2.default.createElement(
                 'div',
@@ -404,10 +406,26 @@ var Graph = function (_React$Component) {
                             'defs', {key: 'def'},
                             _react2.default.createElement(
                                 'marker',
-                                markerStyle,
+                                markerStyleGenerater('#d3d3d3'),
                                 _react2.default.createElement(
                                     'path',
-                                    {d: "M 0 0 L 10 5 L 0 10 z", fill: "rgb(211, 211, 211)"}
+                                    {d: "M 0 0 L 10 5 L 0 10 z", fill: "#d3d3d3"}
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'marker',
+                                markerStyleGenerater('#757575'),
+                                _react2.default.createElement(
+                                    'path',
+                                    {d: "M 0 0 L 10 5 L 0 10 z", fill: "#757575"}
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'marker',
+                                markerStyleGenerater('#9E9E9E'),
+                                _react2.default.createElement(
+                                    'path',
+                                    {d: "M 0 0 L 10 5 L 0 10 z", fill: "#9E9E9E"}
                                 )
                             )
                         ),

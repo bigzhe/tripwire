@@ -71,9 +71,9 @@ app.use(webpackDevMiddleware(compiler, {
 let MODEL = storage.getItemSync('MODEL')
 // transfer the model to the form
 MODEL = unzipMODEL(MODEL)
-// console.log('-------unzipped MODEL---------------');
-// console.log(MODEL);
-// console.log('------------------------------------');
+console.log('-------unzipped MODEL---------------');
+console.log(MODEL);
+console.log('------------------------------------');
 
 // router
 var router = express.Router();

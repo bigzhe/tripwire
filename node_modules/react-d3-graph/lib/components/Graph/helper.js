@@ -58,27 +58,40 @@ function _buildLinkProps(source, target, nodes, links, config, linkCallbacks, so
     if (someNodeHighlighted) {
         opacity = nodes[source].highlighted && nodes[target].highlighted ? config.link.opacity : config.highlightOpacity;
     }
+    var targetLinkId = source + ' ' + target
 
+    // FIXME: the color of the link
     var stroke = config.link.color;
+    if (config.updatedConfig.links[targetLinkId] && config.updatedConfig.links[targetLinkId].color) {
+        stroke = config.updatedConfig.links[targetLinkId].color;
+    }
 
     if (nodes[source].highlighted && nodes[target].highlighted) {
         stroke = config.link.highlightColor === _const2.default.KEYWORDS.SAME ? config.link.color : config.link.highlightColor;
+        if (config.updatedConfig.links[targetLinkId] && config.updatedConfig.links[targetLinkId].highlightColor) {
+            stroke = config.updatedConfig.links[targetLinkId].highlightColor;
+        }
     }
 
     var linkValue = links[source][target] || links[target][source];
 
     var strokeWidth = config.link.strokeWidth;
+    // TODO: update the link stoke width here
+    if (config.updatedConfig.links[targetLinkId] && config.updatedConfig.links[targetLinkId].strokeWidth) {
+        strokeWidth = config.updatedConfig.links[targetLinkId].strokeWidth;
+    }
+
 
     if (config.link.semanticStrokeWidth) {
         strokeWidth += linkValue * strokeWidth / 10;
     }
 
 
+    // pass the target node's size to the link constructor
+    // so the link can be adjusted according to the size of the node
     var targetSize = config.node.size;
-    if (config.updatedConfig[target] && config.updatedConfig[target].size) {
-        targetSize = config.updatedConfig[target].size;
-    } else {
-        targetSize = config.node.size
+    if (config.updatedConfig.nodes[target] && config.updatedConfig.nodes[target].size) {
+        targetSize = config.updatedConfig.nodes[target].size;
     }
 
     return {
@@ -148,7 +161,7 @@ function _buildNodeProps(node, config, nodeCallbacks, someNodeHighlighted) {
     }
 
     // let updatedNodeConfig = config.nodes.find(n => n.id === node.id);
-    const targetUpdatedConfig = config.updatedConfig[node.id] || {}
+    const targetUpdatedConfig = config.updatedConfig.nodes[node.id] || {}
     // targetUpdatedConfig = targetUpdatedConfig || {}
   
 

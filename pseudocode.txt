@@ -1,0 +1,169 @@
+Input: TUPLE, MODEL, ATTACKPATTERN
+Output: MODEL
+
+// we copy the MODEL because we should avoid mutating of variables
+UPDATEDMODEL <- copy the MODEL in this object
+STATEMODEL <- UPDATEDMODEL.STATE
+TRANSITIONMODEL <- UPDATEDMODEL.TRANSITION
+
+targetTransitions <- empty array
+expiredTransitions <- empty array
+
+// transitionMap is used to store the target transitions 
+//during the processing
+// it is used to handle the special case that 
+// the target of transitions are the same state
+transitionMap <- empty JSON object
+
+// read the attributes from the input tuple
+user, device, activity, date <- TUPLE
+
+now <- date // set the current time to the time of tuple
+
+// all users are at the initial state
+if user is not in STATEMODEL:
+  STATEMODEL.user.add({"id": "s0", commitTime: now})
+
+for each s in STATEMODEL.user: // s is an s-tuple with id and commitTime
+
+  for each c in ATTACKPATTERN[s.id].children: // the child state of s
+    // the trigger function of the transition from s to c
+    if ATTACKPATTERN[s.id].trigger[c](TUPLE): 
+
+      if now < s.commitTime + ATTACKPATTERN[s.id].timeout[c]: // expired
+        record the transition to history
+        expiredTransitions.add({"from": s.id, "to": c.id})
+      else: // no expired
+        // handle the transitions directed to the same state
+        if c is not in transitionMap 
+          or transitionMap[c].commitTime is before s.commitTime:
+          transitionMap[c] <- s
+
+  // finally we flatten the transitionMap to the array
+  for each key,value in transitionMap:
+    targetTransitions.add({"from": value.id, "to": key})
+
+return UPDATEDMODEL
+
+---------------
+  
+getTrace
+Input: stateId, userId, MODEL, ATTACKPATTERN
+Output: trace
+
+// the trace of the initial state 
+if stateId = "s0":
+  return empty array
+
+result <- [stateId] // the array with an element
+
+// find all ids of transitions to the current state
+Transitions <- empty array
+for each parent in ATTACKPATTERN[stateId].parents:
+  Transitions.add(MODEL.TRANSITION.userId[parent + ' ' + stateId])
+
+// we need the CeilingTime to terminate the recursion
+CeilingTime <- the latest commitTime of the transition in Transitions
+
+// start the recursion by calling the sub-function
+traceDFS(stateId)
+
+return result
+
+
+traceDFS
+Input: currentStateId
+Output: 
+
+// find all ids of transitions to the current state
+Transitions <- empty array
+for each parent in ATTACKPATTERN[currentStateId].parents:
+  Transitions.add(MODEL.TRANSITION.userId[parent + ' ' + currentStateId])
+
+// terminate condition
+if Transitions is an empty array:
+  return
+
+targetTransition <- the transition with the latest commitTime 
+                    such that transition.commitTime < CeilingTime
+if targetTransition does not exist:
+  return
+else:
+  result.add(transition.from)
+  // continue the recursion
+  traceDFS(transition.from)
+
+
+
+triggerConstructor
+Input: trigger parameters
+Output: raw-data tuple
+
+return function({user, device, date, activity, color}) {
+  // read the attributes from trigger parameters
+  usernameRegex, deviceRegex, activityRegex, floorTime, ceilingTime <- triggerParameters
+
+  // check the regular expression of the user
+  if usernameRegex is not None and user does not satisfy usernameRegex:
+    return false
+
+  if deviceRegex is not None and device does not satisfy deviceRegex:
+    return false
+
+  if activityRegex is not None and activity does not satisfy activityRegex:
+    return false
+
+  if colorRegex is not None and color does not satisfy colorRegex:
+    return false
+
+  if floorTime and ceilingTime are not None:
+    if time < floorTime or time > ceilingTime:
+      return false
+
+  // when all the parameters are satisfied
+  return true
+}
+
+
+
+export const canCommitGenerator = (trigger) => {
+  return ({user, device, date, activity, color}) => {
+
+    if (trigger.username) {
+      const re = new RegExp(trigger.username_regex)
+      if (re.exec(user) === null) return false
+    }
+
+    if (trigger.pc) {
+      const re = new RegExp(trigger.pc_regex)
+      if (re.exec(device) === null) return false
+    }
+
+    if (trigger.activity) {
+      const re = new RegExp(trigger.activity_regex)
+      if (re.exec(device) === null) return false
+    }
+
+    if (trigger.color) {
+      if (color.toLowerCase() !== trigger.color_regex.toLowerCase())
+        return false
+    }
+
+    if (trigger.timeRange) {
+      const from = moment(trigger.start_time)
+      const to = moment(trigger.end_time)
+      const time = moment(date)
+
+      from.set('year', time.get('year'))
+      from.set('month', time.get('month'))
+      from.set('date', time.get('date'))
+      to.set('year', time.get('year'))
+      to.set('month', time.get('month'))
+      to.set('date', time.get('date'))
+
+      if (!time.isBetween(from, to)) return false
+    }
+
+    return true
+  }
+}

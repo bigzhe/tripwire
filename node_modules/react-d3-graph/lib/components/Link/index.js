@@ -94,6 +94,7 @@ var Link = function (_React$Component) {
             var k = 0.013594737
             var b = 14.3626315
             var targetPadding = k * this.props.targetSize + b;
+            targetPadding += lineStyle.strokeWidth * 4.5 - this.props.targetSize / 150
 
             var lineProps = {
                 className: this.props.className,
@@ -105,7 +106,7 @@ var Link = function (_React$Component) {
                 y1: this.props.y1,
                 y2: y2 - (targetPadding * normY),
                 // y2: this.props.y2,
-                markerEnd: "url(#arrow)"
+                markerEnd: "url(#arrow-" + this.props.stroke + ")"
             };
 
             return _react2.default.createElement('line', lineProps);
